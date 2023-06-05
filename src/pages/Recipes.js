@@ -31,7 +31,6 @@ export default function Recipes() {
           console.log(recipes);
         });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
