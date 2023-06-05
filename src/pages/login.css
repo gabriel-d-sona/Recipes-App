@@ -50,6 +50,6 @@
 }
 
 .login-form button:disabled {
-  background-color: #999999;
+  background-color: #999;
   cursor: not-allowed;
 }
