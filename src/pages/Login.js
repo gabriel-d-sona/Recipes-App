@@ -17,7 +17,7 @@ function Login() {
   return (
     <div className="login-container">
       <form className="login-form">
-        <label htmlFor="email">
+        <label htmlFor="email" className="label">
           <input
             placeholder="Email"
             data-testid="email-input"
@@ -28,7 +28,7 @@ function Login() {
             onChange={ handleOnChange }
           />
         </label>
-        <label htmlFor="password">
+        <label htmlFor="password" className="label">
           <input
             placeholder="Senha"
             data-testid="password-input"
@@ -39,7 +39,13 @@ function Login() {
             onChange={ handleOnChange }
           />
         </label>
-        <button data-testid="login-submit-btn" type="button">Enter</button>
+        <button
+          data-testid="login-submit-btn"
+          className="label"
+          type="button"
+        >
+          Enter
+        </button>
       </form>
     </div>
   );
