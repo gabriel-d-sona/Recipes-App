@@ -38,8 +38,8 @@
   width: 100%;
 }
 
-.login-form label,
-.login-form input,
+.login-form label, 
+.login-form input, 
 .login-form button {
   display: block;
   margin-left: auto;
