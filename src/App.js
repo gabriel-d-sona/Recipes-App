@@ -12,6 +12,7 @@ function App() {
         <Route path="/meals" component={ Recipes } />
         <Route path="/drinks" component={ Recipes } />
         <Route exact path="/" component={ Login } />
+        <Route exact path="/meals" />
       </Switch>
     </BrowserRouter>
   );

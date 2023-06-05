@@ -48,3 +48,8 @@
 .login-form button:hover {
   background-color: #45a049;
 }
+
+.login-form button:disabled {
+  background-color: #999999;
+  cursor: not-allowed;
+}

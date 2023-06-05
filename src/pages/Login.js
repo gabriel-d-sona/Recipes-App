@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import userContext from '../context/userContext';
 import './login.css';
 
 function Login() {
-  const { user, setUser } = useContext(userContext);
+  const history = useHistory();
+  const { user, setUser, isValidEmail, isValidPassword } = useContext(userContext);
   const { email, password } = user;
 
   const handleOnChange = ({ target }) => {
@@ -12,6 +14,11 @@ function Login() {
       ...user,
       [name]: value,
     });
+  };
+
+  const handleOnClick = () => {
+    localStorage.setItem('user', JSON.stringify({ email }));
+    history.push('/meals');
   };
 
   return (
@@ -43,6 +50,8 @@ function Login() {
           data-testid="login-submit-btn"
           className="label"
           type="button"
+          disabled={ !(isValidEmail(email) && isValidPassword(password)) }
+          onClick={ handleOnClick }
         >
           Enter
         </button>
