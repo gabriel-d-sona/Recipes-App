@@ -1,5 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import Header from '../components/Header';
 // import Footer from '../components/Footer';
 
 export default function Profile() {
@@ -12,6 +13,7 @@ export default function Profile() {
 
   return (
     <div>
+      <Header />
       <p data-testid="profile-email">email</p>
       <button
         type="button"
