@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
 
 export default function Header() {
+  const [clickedBar, setClickedBar] = useState(false);
   const location = useLocation();
   const path = location.pathname;
   const pathSearch = path === '/meals' || path === '/drinks';
@@ -21,19 +22,28 @@ export default function Header() {
     pageTitle = 'Favorite Recipes';
   }
 
+  const searchClick = () => {
+    setClickedBar(!clickedBar);
+  };
+
   return (
     <header>
       <Link to="/profile">
         <img src={ profileIcon } alt="Perfil" data-testid="profile-top-btn" />
       </Link>
-      {pathSearch && (
-        <img
-          src={ searchIcon }
-          alt="search"
-          data-testid="search-top-btn"
-        />
 
+      {pathSearch && (
+        <button
+          data-testid="search-top-btn"
+          src={ searchIcon }
+          onClick={ searchClick }
+        >
+          <img src={ searchIcon } alt="Ícone de pesquisa" />
+        </button>
       )}
+
+      {clickedBar && <input data-testid="search-input" />}
+
       <h1 data-testid="page-title">{pageTitle}</h1>
     </header>
   );
