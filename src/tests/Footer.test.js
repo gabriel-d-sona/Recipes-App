@@ -1,13 +1,17 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import Footer from '../components/Footer';
 
-test('Test footer', () => {
-  render(<Footer />);
+describe('Footer component', () => {
+  it('renders drink icon', () => {
+    const { getByAltText } = render(<Footer />);
+    const drinkIcon = getByAltText('drink');
+    expect(drinkIcon).toBeInTheDocument();
+  });
 
-  const drinkIcon = screen.getByTestId('drinks-bottom-btn');
-  const mealIcon = screen.getByTestId('meals-bottom-btn');
-
-  expect(drinkIcon).toBeInTheDocument();
-  expect(mealIcon).toBeInTheDocument();
+  it('renders meal icon', () => {
+    const { getByAltText } = render(<Footer />);
+    const mealIcon = getByAltText('meal');
+    expect(mealIcon).toBeInTheDocument();
+  });
 });
