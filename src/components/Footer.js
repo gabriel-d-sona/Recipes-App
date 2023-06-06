@@ -6,15 +6,20 @@ import mealIcon from '../images/mealIcon.svg';
 export default function Footer() {
   return (
     <footer data-testid="footer">
-      <Link to="/drinks" data-testid="drinks-bottom-btn">
-        <a href="drinks">
-          <img src={ drinkIcon } alt="drink" />
-        </a>
+      <Link to="/drinks">
+
+        <img
+          src={ drinkIcon }
+          alt="drink"
+          data-testid="drinks-bottom-btn"
+        />
       </Link>
-      <Link to="/meals" data-testid="meals-bottom-btn">
-        <a href="/meals">
-          <img src={ mealIcon } alt="meal" />
-        </a>
+      <Link to="/meals">
+        <img
+          src={ mealIcon }
+          alt="meal"
+          data-testid="meals-bottom-btn"
+        />
       </Link>
     </footer>
   );
