@@ -1,17 +1,20 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import Footer from '../components/Footer';
 
-describe('Footer component', () => {
-  it('renders drink icon', () => {
-    const { getByAltText } = render(<Footer />);
-    const drinkIcon = getByAltText('drink');
-    expect(drinkIcon).toBeInTheDocument();
-  });
+test('redireciona ao clicar nos botões', () => {
+  const { getByTestId } = render(
+    <Router>
+      <Footer />
+    </Router>,
+  );
 
-  it('renders meal icon', () => {
-    const { getByAltText } = render(<Footer />);
-    const mealIcon = getByAltText('meal');
-    expect(mealIcon).toBeInTheDocument();
-  });
+  const drinksBtn = getByTestId('drinks-bottom-btn');
+  fireEvent.click(drinksBtn);
+  expect(window.location.pathname).toBe('/drinks');
+
+  const mealsBtn = getByTestId('meals-bottom-btn');
+  fireEvent.click(mealsBtn);
+  expect(window.location.pathname).toBe('/meals');
 });
