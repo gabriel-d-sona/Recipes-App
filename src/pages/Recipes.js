@@ -21,12 +21,14 @@ export default function Recipes() {
   useEffect(() => {
     const MN1 = 12;
     if (isMealRoute) {
+      // Primeiro fetch de meals feito para renderização dos cards de comida na tela
       fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
         .then((response) => response.json())
         .then(({ meals }) => {
           const treatedDataForRecipes = meals.slice(0, MN1);
           setRecipes(treatedDataForRecipes);
         });
+      // Segundo fetch de meals feito em um endpoint diferente para renderização dos botões de filtragem de catégoria
       fetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list')
         .then((response) => response.json())
         .then(({ meals }) => {
@@ -34,6 +36,7 @@ export default function Recipes() {
           console.log(meals);
         });
     } else {
+      // Primeiro fetch de drinks feito para renderização dos cards de bebida na tela
       fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=')
         .then((response) => response.json())
         .then(({ drinks }) => {
@@ -41,6 +44,7 @@ export default function Recipes() {
           setRecipes(treatedDataForRecipes);
           // console.log(drinks);
         });
+      // Segundo fetch de drinks feito em um endpoint diferente para renderização dos botões de filtragem de catégoria
       fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list')
         .then((response) => response.json())
         .then(({ drinks }) => {
@@ -54,25 +58,18 @@ export default function Recipes() {
     <div>
       <Header />
       <main>
-        { isMealRoute ? categories
+        { categories
           .slice(0, MN2)
           .map(({ strCategory }, i) => (
             <FiltterButton
               key={ i }
               category={ strCategory }
             />
-          )) : categories
-          .slice(0, MN2)
-          .map(({ strCategory }, i) => (
-            <FiltterButton
-              key={ i }
-              category={ strCategory }
-            />
-          ))}
+          )) }
         {/* Aqui Fazemos uso do operador ternario e do componente ../components/Card criado para essa aplicação,
       dependendo de qual rota estiver sendo utilizada a página renderiza os 12
-      primeiros itens da lista que de receitas que a devida API nos retorna.
-    (O requisito pede que sejam renderizados apenas os primeiros 12 itens.)  */}
+      primeiros itens da lista de receitas que a devida API nos retorna.
+    (O requisito pede que sejam renderizados apenas os primeiros 12 itens)  */}
         { isMealRoute ? recipes.map((recipe, i) => (
           <Card
             key={ recipe.strMeal }
