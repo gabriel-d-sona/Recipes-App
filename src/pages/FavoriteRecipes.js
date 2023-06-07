@@ -5,6 +5,7 @@ function FavoriteRecipes() {
   return (
     <div>
       <Header />
+      test
     </div>
   );
 }
