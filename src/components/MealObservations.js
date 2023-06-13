@@ -1,8 +1,22 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import filterArrays from '../services/helpers/filterArrays';
+import requestApi from '../services/helpers/requestApi';
 
+const endPointForDrinks = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
 function MealObservations({ recipe }) {
+  const [drinks, setDrinks] = useState([]);
+
+  useEffect(() => {
+    const fetchApi = async () => {
+      const data = await requestApi(endPointForDrinks);
+
+      setDrinks(data.drinks);
+    };
+
+    fetchApi();
+  }, []);
+
   const {
     strMealThumb,
     strMeal,
@@ -13,8 +27,6 @@ function MealObservations({ recipe }) {
 
   const strIngredients = filterArrays(recipe[0], 'strIngredient');
   const strMeasures = filterArrays(recipe[0], 'strMeasure');
-
-  console.log(strIngredients);
 
   return (
     <div>
