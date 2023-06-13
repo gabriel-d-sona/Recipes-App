@@ -15,11 +15,13 @@ export default function Recipes() {
 
   const [recipes, setRecipes] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
+
+  const MN1 = 12;
   const MN2 = 5;
 
   // Esse use effect faz um fetch assim que a página é montada de acordo com a rota utilizada e capturada no código sinalizado acima.
   useEffect(() => {
-    const MN1 = 12;
     if (isMealRoute) {
       // Primeiro fetch de meals feito para renderização dos cards de comida na tela
       fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
@@ -27,6 +29,7 @@ export default function Recipes() {
         .then(({ meals }) => {
           const treatedDataForRecipes = meals.slice(0, MN1);
           setRecipes(treatedDataForRecipes);
+          setFilteredRecipes(treatedDataForRecipes);
         });
       // Segundo fetch de meals feito em um endpoint diferente para renderização dos botões de filtragem de catégoria
       fetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list')
@@ -42,6 +45,7 @@ export default function Recipes() {
         .then(({ drinks }) => {
           const treatedDataForRecipes = drinks.slice(0, MN1);
           setRecipes(treatedDataForRecipes);
+          setFilteredRecipes(treatedDataForRecipes);
           // console.log(drinks);
         });
       // Segundo fetch de drinks feito em um endpoint diferente para renderização dos botões de filtragem de catégoria
@@ -54,6 +58,31 @@ export default function Recipes() {
     }
   }, []);
 
+  function handleClick({ target }) {
+    const { value, checked } = target;
+    console.log(value, checked);
+    if (isMealRoute) {
+      fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${value}`)
+        .then((response) => response.json())
+        .then(({ meals }) => {
+          setRecipes(meals.slice(0, MN1));
+          console.log(recipes);
+        });
+    } else {
+      fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${value}`)
+        .then((response) => response.json())
+        .then(({ drinks }) => {
+          setRecipes(drinks.slice(0, MN1));
+          console.log(recipes);
+        });
+    }
+    // const { beef, breakfast, chiken, dessert, goat } = mealFilters;
+  }
+
+  // function handleFilterClick() {
+
+  // }
+
   return (
     <div>
       <Header />
@@ -64,8 +93,16 @@ export default function Recipes() {
             <FiltterButton
               key={ i }
               category={ strCategory }
+              handleClick={ (e) => handleClick(e) }
             />
           )) }
+        <button
+          type="button"
+          data-testid="All-category-filter"
+          onClick={ () => setRecipes(filteredRecipes) }
+        >
+          All
+        </button>
         {/* Aqui Fazemos uso do operador ternario e do componente ../components/Card criado para essa aplicação,
       dependendo de qual rota estiver sendo utilizada a página renderiza os 12
       primeiros itens da lista de receitas que a devida API nos retorna.
