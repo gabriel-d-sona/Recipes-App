@@ -36,7 +36,6 @@ export default function Recipes() {
         .then((response) => response.json())
         .then(({ meals }) => {
           setCategories(meals);
-          console.log(meals);
         });
     } else {
       // Primeiro fetch de drinks feito para renderização dos cards de bebida na tela
@@ -46,42 +45,44 @@ export default function Recipes() {
           const treatedDataForRecipes = drinks.slice(0, MN1);
           setRecipes(treatedDataForRecipes);
           setFilteredRecipes(treatedDataForRecipes);
-          // console.log(drinks);
+          console.log(filteredRecipes);
         });
       // Segundo fetch de drinks feito em um endpoint diferente para renderização dos botões de filtragem de catégoria
       fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list')
         .then((response) => response.json())
         .then(({ drinks }) => {
           setCategories(drinks);
-          console.log(drinks);
         });
     }
   }, []);
 
+  // Utilizamos essa função para a manipulação das receitas renderizadas na tela, a lógica abaixo é feita para que
+  // ao ativar um dos botões de filtro da tela, sejam renderizadas as 12 primeiras receitas da categoria cujo são os nomes dos botões.
+  // E por fim fazer com que se caso o botão clicado esteja sendo desmarcado seja renderizada a end point inicial que é renderizada quando dando o primeiro load na tela.
   function handleClick({ target }) {
     const { value, checked } = target;
-    console.log(value, checked);
-    if (isMealRoute) {
+    // verifica se a rota é /meals e se o botão com quem o usuario está interajindo está marcado.
+    if (isMealRoute && checked) {
       fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${value}`)
         .then((response) => response.json())
         .then(({ meals }) => {
           setRecipes(meals.slice(0, MN1));
-          console.log(recipes);
         });
-    } else {
+    } if (!isMealRoute && checked) {
+      // verifica se a rota é /drinks e se o botão com quem o usuario está interajindo está marcado.
       fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${value}`)
         .then((response) => response.json())
         .then(({ drinks }) => {
           setRecipes(drinks.slice(0, MN1));
-          console.log(recipes);
         });
     }
-    // const { beef, breakfast, chiken, dessert, goat } = mealFilters;
+    if (!checked) {
+      // verifica se o botão com quem o usuario está interajindo está desmarcado.
+      console.log('teste');
+      setRecipes(filteredRecipes);
+      console.log(filteredRecipes);
+    }
   }
-
-  // function handleFilterClick() {
-
-  // }
 
   return (
     <div>

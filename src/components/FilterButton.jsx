@@ -7,14 +7,13 @@ export function FiltterButton(props) {
   return (
     <div>
       <label>
-        <button
+        { category }
+        <input
           type="checkbox"
           value={ category }
           data-testid={ `${category}-category-filter` }
-          onClick={ handleClick }
-        >
-          { category }
-        </button>
+          onChange={ handleClick }
+        />
       </label>
     </div>
   );
