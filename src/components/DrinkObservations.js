@@ -1,8 +1,22 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import filterArrays from '../services/helpers/filterArrays';
+import requestApi from '../services/helpers/requestApi';
 
+const endPointForMeals = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
 function DrinkObservations({ recipe }) {
+  const [meals, setMeals] = useState([]);
+
+  useState(() => {
+    const fetchApi = async () => {
+      const data = await requestApi(endPointForMeals);
+
+      setMeals(data.meals);
+    };
+
+    fetchApi();
+  }, []);
+
   const {
     idDrink,
     strDrink,
