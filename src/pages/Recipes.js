@@ -29,6 +29,7 @@ export default function Recipes() {
         .then(({ meals }) => {
           const treatedDataForRecipes = meals.slice(0, MN1);
           setRecipes(treatedDataForRecipes);
+          console.log(meals);
           setFilteredRecipes(treatedDataForRecipes);
         });
       // Segundo fetch de meals feito em um endpoint diferente para renderização dos botões de filtragem de catégoria
@@ -44,8 +45,8 @@ export default function Recipes() {
         .then(({ drinks }) => {
           const treatedDataForRecipes = drinks.slice(0, MN1);
           setRecipes(treatedDataForRecipes);
+          console.log(recipes);
           setFilteredRecipes(treatedDataForRecipes);
-          console.log(filteredRecipes);
         });
       // Segundo fetch de drinks feito em um endpoint diferente para renderização dos botões de filtragem de catégoria
       fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list')
@@ -84,6 +85,16 @@ export default function Recipes() {
     }
   }
 
+  function handleDetailsClick({ target }) {
+    const { value } = target;
+    console.log(value);
+    if (isMealRoute) {
+      history.push(`/meals/:${value}`);
+    } else {
+      history.push(`/drinks/:${value}`);
+    }
+  }
+
   return (
     <div>
       <Header />
@@ -114,6 +125,8 @@ export default function Recipes() {
             name={ recipe.strMeal }
             imgSrc={ recipe.strMealThumb }
             SrcIndex={ i }
+            id={ recipe.idMeal }
+            handleDetailsClick={ (e) => handleDetailsClick(e) }
           />
         )) : recipes.map((recipe, i) => (
           <Card
@@ -121,6 +134,8 @@ export default function Recipes() {
             name={ recipe.strDrink }
             imgSrc={ recipe.strDrinkThumb }
             SrcIndex={ i }
+            id={ recipe.idDrink }
+            handleDetailsClick={ (e) => handleDetailsClick(e) }
           />
         ))}
       </main>
