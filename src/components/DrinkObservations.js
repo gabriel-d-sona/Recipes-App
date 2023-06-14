@@ -29,6 +29,7 @@ function DrinkObservations({ recipe }) {
   const strIngredients = filterArrays(recipe[0], 'strIngredient');
   const strMeasures = filterArrays(recipe[0], 'strMeasure');
 
+  const six = 6;
   return (
     <div>
       <section key={ idDrink }>
@@ -91,6 +92,19 @@ function DrinkObservations({ recipe }) {
           {strInstructions}
 
         </p>
+      </section>
+
+      <section>
+        <h4>Recomendações:</h4>
+        {
+          meals.map((meal, index) => (index < six ? (
+            <div key={ index }>
+              <p>{ meal.strMeal }</p>
+              <img src={ meal.strMealThumb } alt={ meal.strMeal } />
+            </div>
+          ) : undefined))
+        }
+
       </section>
 
     </div>
