@@ -2,16 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export function DoneDrinkCard(props) {
-  const { name, image, index, doneDate, handleClick } = props;
+  const { name, image, index, doneDate, handleClick, handleDetailsClick } = props;
 
   return (
     <div>
       <h3
+        role="presentation"
+        onClick={ handleDetailsClick }
         data-testid={ `${index}-horizontal-name` }
       >
         { name }
       </h3>
       <img
+        role="presentation"
+        onClick={ handleDetailsClick }
         alt={ name }
         src={ image }
         data-testid={ `${index}-horizontal-image` }

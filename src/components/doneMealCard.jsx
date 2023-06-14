@@ -10,11 +10,14 @@ export function DoneMealCard(props) {
     doneDate,
     tagName,
     nationality,
-    handleClick } = props;
+    handleClick,
+    handleDetailsClick } = props;
 
   return (
     <div>
       <h3
+        role="presentation"
+        onClick={ handleDetailsClick }
         data-testid={ `${index}-horizontal-name` }
       >
         { name }
@@ -25,6 +28,8 @@ export function DoneMealCard(props) {
         { category }
       </p>
       <img
+        role="presentation"
+        onClick={ handleDetailsClick }
         alt={ name }
         src={ image }
         data-testid={ `${index}-horizontal-image` }
