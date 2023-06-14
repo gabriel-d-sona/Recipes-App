@@ -20,6 +20,18 @@ function DrinkObservations({ recipe, history }) {
   const [isCopy, setIsCopy] = useState(false);
   const { drinksId } = recipeId;
 
+  useEffect(() => {
+    const data = getLocalStorage('doneRecipes');
+    setDoneRecipes(data);
+  }, [doneRecipes]);
+
+  useEffect(() => {
+    if (doneRecipes) {
+      doneRecipes
+        .map((element) => (element.id === drinksId && (setIsDone(true))));
+    }
+  }, [doneRecipes, drinksId]);
+
   const {
     idDrink,
     strDrink,

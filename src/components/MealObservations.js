@@ -88,7 +88,7 @@ function MealObservations({ recipe, history }) {
     }
   };
 
-  // const six = 6;
+  const six = 6;
 
   return (
     <div
