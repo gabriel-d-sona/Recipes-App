@@ -58,7 +58,6 @@ function DrinkObservations({ recipe, history }) {
   const strMeasures = filterArrays(recipe[0], 'strMeasure');
 
   const six = 6;
-
   return (
     <div
       className="div-absolute"
