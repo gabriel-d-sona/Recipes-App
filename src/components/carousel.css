@@ -6,3 +6,18 @@
 .img-carousel {
   width: 50%;
 }
+
+.btn-start {
+  bottom: 0;
+  position: fixed;
+}
+
+.btn-start-none {
+  bottom: 0;
+  display: none;
+  position: fixed;
+}
+
+.div-absolute {
+  position: absolute;
+}

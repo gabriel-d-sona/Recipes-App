@@ -1,13 +1,23 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Carousel from 'react-bootstrap/Carousel';
+import { useParams } from 'react-router-dom';
 import filterArrays from '../services/helpers/filterArrays';
 import requestApi from '../services/helpers/requestApi';
+import 'bootstrap/dist/css/bootstrap.css';
+import './carousel.css';
+import { getLocalStorage } from '../services/helpers/localStorage';
 
 const endPointForMeals = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
 function DrinkObservations({ recipe }) {
+  const recipeId = useParams();
   const [meals, setMeals] = useState([]);
+  const [doneRecipes, setDoneRecipes] = useState([]);
+  const [isDone, setIsDone] = useState(false);
 
-  useState(() => {
+  const { drinksId } = recipeId;
+
+  useEffect(() => {
     const fetchApi = async () => {
       const data = await requestApi(endPointForMeals);
 
@@ -16,6 +26,18 @@ function DrinkObservations({ recipe }) {
 
     fetchApi();
   }, []);
+
+  useEffect(() => {
+    const data = getLocalStorage('doneRecipes');
+    setDoneRecipes(data);
+  }, [doneRecipes]);
+
+  useEffect(() => {
+    if (doneRecipes) {
+      doneRecipes
+        .map((element) => (element.id === drinksId && (setIsDone(true))));
+    }
+  }, [doneRecipes, drinksId]);
 
   const {
     idDrink,
@@ -30,8 +52,11 @@ function DrinkObservations({ recipe }) {
   const strMeasures = filterArrays(recipe[0], 'strMeasure');
 
   const six = 6;
+
   return (
-    <div>
+    <div
+      className="div-absolute"
+    >
       <section key={ idDrink }>
         <img
           src={ strDrinkThumb }
@@ -94,19 +119,47 @@ function DrinkObservations({ recipe }) {
         </p>
       </section>
 
-      <section>
-        <h4>Recomendações:</h4>
+      <h4>Recomendações:</h4>
+      <Carousel>
         {
           meals.map((meal, index) => (index < six ? (
-            <div key={ index }>
-              <p>{ meal.strMeal }</p>
-              <img src={ meal.strMealThumb } alt={ meal.strMeal } />
-            </div>
+            <Carousel.Item key={ index }>
+              <div data-testid={ `${index}-recommendation-card` }>
+                <div className="carousel-container">
+                  <img
+                    className="img-carousel"
+                    src={ meal.strMealThumb }
+                    alt={ meal.strMeal }
+                  />
+                  <h4
+                    data-testid={ `${index}-recommendation-title` }
+                  >
+                    {meal.strMeal}
+
+                  </h4>
+                </div>
+              </div>
+            </Carousel.Item>
           ) : undefined))
         }
-
-      </section>
-
+      </Carousel>
+      {
+        isDone ? (
+          <button
+            data-testid="start-recipe-btn"
+            className="btn-start-none"
+          >
+            Start Recipe
+          </button>
+        ) : (
+          <button
+            data-testid="start-recipe-btn"
+            className="btn-start"
+          >
+            Start Recipe
+          </button>
+        )
+      }
     </div>
   );
 }
