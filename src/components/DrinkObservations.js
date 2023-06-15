@@ -7,6 +7,7 @@ import requestApi from '../services/helpers/requestApi';
 import 'bootstrap/dist/css/bootstrap.css';
 import './carousel.css';
 import { getLocalStorage } from '../services/helpers/localStorage';
+import './btnStartAndContinue.css';
 
 const endPointForMeals = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
 function DrinkObservations({ recipe }) {
@@ -14,6 +15,8 @@ function DrinkObservations({ recipe }) {
   const [meals, setMeals] = useState([]);
   const [doneRecipes, setDoneRecipes] = useState([]);
   const [isDone, setIsDone] = useState(false);
+  const [inProgressRecipes, setInProgressRecipes] = useState(null);
+  const [inProgress, setInProgress] = useState(false);
 
   const { drinksId } = recipeId;
 
@@ -28,16 +31,29 @@ function DrinkObservations({ recipe }) {
   }, []);
 
   useEffect(() => {
-    const data = getLocalStorage('doneRecipes');
-    setDoneRecipes(data);
-  }, [doneRecipes]);
+    const done = getLocalStorage('doneRecipes');
+    setDoneRecipes(done);
+    const progress = getLocalStorage('inProgressRecipes');
+    setInProgressRecipes(progress);
+  }, [doneRecipes, inProgressRecipes]);
 
   useEffect(() => {
     if (doneRecipes) {
       doneRecipes
         .map((element) => (element.id === drinksId && (setIsDone(true))));
     }
-  }, [doneRecipes, drinksId]);
+    if (inProgressRecipes.drinks[drinksId]) {
+      Object.keys(inProgressRecipes.drinks)
+        .map((element) => element === drinksId && setInProgress(true));
+    }
+  }, [doneRecipes, drinksId, inProgressRecipes]);
+
+  // useEffect(() => {
+  //   if (inProgressRecipes) {
+  //     Object.keys(inProgressRecipes.drinks)
+  //       .map((element) => element === drinksId && setInProgress(true));
+  //   }
+  // }, [inProgressRecipes, drinksId]);
 
   const {
     idDrink,
@@ -144,21 +160,27 @@ function DrinkObservations({ recipe }) {
         }
       </Carousel>
       {
-        isDone ? (
+        !isDone ? (
           <button
             data-testid="start-recipe-btn"
-            className="btn-start-none"
+            className="btn-start-continue"
           >
             Start Recipe
           </button>
         ) : (
+          null
+        )
+      }
+
+      {
+        inProgress ? (
           <button
             data-testid="start-recipe-btn"
-            className="btn-start"
+            className="btn-start-continue"
           >
-            Start Recipe
+            Continue Recipe
           </button>
-        )
+        ) : null
       }
     </div>
   );
