@@ -7,6 +7,7 @@ import requestApi from '../services/helpers/requestApi';
 import 'bootstrap/dist/css/bootstrap.css';
 import './carousel.css';
 import { getLocalStorage } from '../services/helpers/localStorage';
+import './btnStartAndContinue.css';
 
 const endPointForDrinks = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
 function MealObservations({ recipe }) {
@@ -14,6 +15,8 @@ function MealObservations({ recipe }) {
   const [drinks, setDrinks] = useState([]);
   const [doneRecipes, setDoneRecipes] = useState([]);
   const [isDone, setIsDone] = useState(false);
+  const [inProgressRecipes, setInProgressRecipes] = useState(null);
+  const [inProgress, setInProgress] = useState(false);
 
   const { mealsId } = recipeId;
 
@@ -22,22 +25,36 @@ function MealObservations({ recipe }) {
       const data = await requestApi(endPointForDrinks);
 
       setDrinks(data.drinks);
+      console.log('Oiii');
     };
 
     fetchApi();
   }, []);
 
   useEffect(() => {
-    const data = getLocalStorage('doneRecipes');
-    setDoneRecipes(data);
-  }, [doneRecipes]);
+    const done = getLocalStorage('doneRecipes');
+    setDoneRecipes(done);
+    const progress = getLocalStorage('inProgressRecipes');
+    setInProgressRecipes(progress);
+  }, [doneRecipes, inProgressRecipes]);
 
   useEffect(() => {
     if (doneRecipes) {
       doneRecipes
         .map((element) => (element.id === mealsId && (setIsDone(true))));
     }
-  }, [doneRecipes, mealsId]);
+    if (inProgressRecipes.meals[mealsId]) {
+      Object.keys(inProgressRecipes.meals)
+        .map((element) => element === mealsId && setInProgress(true));
+    }
+  }, [doneRecipes, mealsId, inProgressRecipes]);
+
+  // useEffect(() => {
+  //   if (inProgressRecipes) {
+  //     Object.keys(inProgressRecipes.meals)
+  //       .map((element) => element === mealsId && setInProgress(true));
+  //   }
+  // }, [inProgressRecipes, mealsId]);
 
   const {
     strMealThumb,
@@ -148,21 +165,27 @@ function MealObservations({ recipe }) {
       </Carousel>
 
       {
-        isDone ? (
+        !isDone ? (
           <button
             data-testid="start-recipe-btn"
-            className="btn-start-none"
+            className="btn-start-continue"
           >
             Start Recipe
           </button>
         ) : (
+          null
+        )
+      }
+
+      {
+        inProgress ? (
           <button
             data-testid="start-recipe-btn"
-            className="btn-start"
+            className="btn-start-continue"
           >
-            Start Recipe
+            Continue Recipe
           </button>
-        )
+        ) : null
       }
     </div>
   );

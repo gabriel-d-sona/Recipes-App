@@ -1,38 +1,52 @@
 import React from 'react';
-import { act, screen, waitForElementToBeRemoved } from '@testing-library/react';
-import { useParams } from 'react-router-dom';
+import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import renderWithRouter from './helpers/renderWithRouter';
-import RecipeDetails from '../pages/RecipeDetails';
+import App from '../App';
 import meal from './mocks/requestApiMealById';
-import drink from './mocks/requestApiDrinksById';
+import drink from './mocks/requestApiDrinkById';
+import { meals } from '../../cypress/mocks/meals';
+import { drinks } from '../../cypress/mocks/drinks';
 
 beforeEach(() => {
-  const recipeId = useParams();
-  if (recipeId.mealsId) {
-    jest.spyOn(global, 'fetch')
-      .mockImplementation(() => Promise.resolve({
-        status: 200,
-        ok: true,
-        json: () => Promise.resolve(meal),
-      }));
-  } else {
-    jest.spyOn(global, 'fetch')
-      .mockImplementation(() => Promise.resolve({
-        status: 200,
-        ok: true,
-        json: () => Promise.resolve(drink),
-      }));
-  }
+  jest.spyOn(global, 'fetch')
+    .mockImplementation((url) => {
+      if (url === 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=52772') {
+        return Promise.resolve({
+          status: 200,
+          ok: true,
+          json: () => Promise.resolve(meal),
+        });
+      }
+      if (url === 'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=11007') {
+        return Promise.resolve({
+          status: 200,
+          ok: true,
+          json: () => Promise.resolve(drink),
+        });
+      }
+      if (url === 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=') {
+        return Promise.resolve({
+          status: 200,
+          ok: true,
+          json: () => Promise.resolve(drinks),
+        });
+      }
+      if (url === 'https://www.themealdb.com/api/json/v1/1/search.php?s=') {
+        return Promise.resolve({
+          status: 200,
+          ok: true,
+          json: () => Promise.resolve(meals),
+        });
+      }
+    });
 });
 
 afterEach(() => jest.restoreAllMocks);
 
 describe('Testa a tela de detalhes de uma refeição', () => {
   it('Testa se foi feito um fetch para a API de refeição com o ID da receita atual', async () => {
-    const { history } = renderWithRouter(<RecipeDetails />);
-    act(() => {
-      history.push('/meals/52772');
-    });
+    renderWithRouter(<App />, ['/meals/52772']);
+
     // const isLoading = screen.queryByText(/carregando/i);
     await waitForElementToBeRemoved(() => screen.getByText(/carregando/i));
     // await waitFor(() => expect(screen.queryByText(/carregando/i)).not.toBeInTheDocument());
