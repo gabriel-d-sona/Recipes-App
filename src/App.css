@@ -10,6 +10,12 @@
   width: 100%;
 }
 
+.recipe-photo {
+  border-radius: 50%;
+  height: 150px;
+  width: 150px;
+}
+
 .rocksGlass {
   animation: shake 1s infinite ease;
   max-height: 80vh;

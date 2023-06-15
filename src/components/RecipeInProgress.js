@@ -23,6 +23,16 @@ function RecipeInProgress() {
       setIsLoading(false);
     };
     fetchRecipeDetails();
+
+    // Verifica localStorage
+    const savedProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    const isDrinkRoute = location.pathname.includes('/drinks/');
+    const recipeType = isDrinkRoute ? 'drinks' : 'meals';
+    // recipe type ABENÇOADO NAO ESTAVA VERIFICADO NO LOCALSTORAGE
+    if (savedProgress && savedProgress[recipeType] && savedProgress[recipeType][id]) {
+      setCheckedIngredients(savedProgress[recipeType][id]);
+    // correção do saveProgress[recipeType][id] para acessar os ingredientes no localstorage
+    }
   }, [id, location]);
 
   if (isLoading) return <div>Loading...</div>;
@@ -49,6 +59,23 @@ function RecipeInProgress() {
       newCheckedIngredients.push(index);
     }
     setCheckedIngredients(newCheckedIngredients);
+
+    // Atualiza o localStorage
+    const savedProgress = JSON.parse(
+      localStorage.getItem('inProgressRecipes'),
+    ) || { drinks: {}, meals: {} };
+    const isDrinkRoute = location.pathname.includes('/drinks/');
+    const recipeType = isDrinkRoute ? 'drinks' : 'meals';
+    localStorage.setItem(
+      'inProgressRecipes',
+      JSON.stringify({
+        ...savedProgress,
+        [recipeType]: {
+          ...savedProgress[recipeType],
+          [id]: newCheckedIngredients,
+        },
+      }),
+    );
   };
 
   const ingredients = getIngredients(recipeDetails);
@@ -63,21 +90,18 @@ function RecipeInProgress() {
             alt="Receita a ser fe"
             data-testid="recipe-photo"
           />
-          {/* Exibe o título da receita */}
           <h2 data-testid="recipe-title">
             {recipeDetails.strMeal || recipeDetails.strDrink}
           </h2>
-          {/* Exibe a categoria da receita ou se é alcoólico em caso de bebida */}
           <h2 data-testid="recipe-category">
             {recipeDetails.strCategory || recipeDetails.strAlcoholic}
           </h2>
-
-          {/* Exibe a lista de ingredientes com checkboxes */}
           <h2>Ingredientes da receita</h2>
           <ul>
             {ingredients.map((ingredient, index) => (
               <li key={ index }>
                 <label
+                  htmlFor="checkbox"
                   data-testid={ `${index}-ingredient-step` }
                   style={
                     checkedIngredients.includes(index)
@@ -87,6 +111,8 @@ function RecipeInProgress() {
                 >
                   <input
                     type="checkbox"
+                    name="checkbox"
+                    checked={ checkedIngredients.includes(index) }
                     onChange={ () => handleCheckIngredient(index) }
                   />
                   {ingredient}
