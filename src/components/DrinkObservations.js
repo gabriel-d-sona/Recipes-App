@@ -30,7 +30,18 @@ function DrinkObservations({ recipe, history }) {
       doneRecipes
         .map((element) => (element.id === drinksId && (setIsDone(true))));
     }
-  }, [doneRecipes, drinksId]);
+    if (inProgressRecipes.drinks[drinksId]) {
+      Object.keys(inProgressRecipes.drinks)
+        .map((element) => element === drinksId && setInProgress(true));
+    }
+  }, [doneRecipes, drinksId, inProgressRecipes]);
+
+  // useEffect(() => {
+  //   if (inProgressRecipes) {
+  //     Object.keys(inProgressRecipes.drinks)
+  //       .map((element) => element === drinksId && setInProgress(true));
+  //   }
+  // }, [inProgressRecipes, drinksId]);
 
   const {
     idDrink,
