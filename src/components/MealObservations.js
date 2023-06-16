@@ -39,7 +39,6 @@ function MealObservations({ recipe, history }) {
       const data = await requestApi(endPointForDrinks);
 
       setDrinks(data.drinks);
-      console.log('Oiii');
     };
 
     fetchApi();

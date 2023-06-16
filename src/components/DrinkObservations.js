@@ -30,10 +30,10 @@ function DrinkObservations({ recipe, history }) {
       doneRecipes
         .map((element) => (element.id === drinksId && (setIsDone(true))));
     }
-    if (inProgressRecipes.drinks[drinksId]) {
-      Object.keys(inProgressRecipes.drinks)
-        .map((element) => element === drinksId && setInProgress(true));
-    }
+    // if (inProgressRecipes.drinks[drinksId]) {
+    //   Object.keys(inProgressRecipes.drinks)
+    //     .map((element) => element === drinksId && setInProgress(true));
+    // }
   }, [doneRecipes, drinksId, inProgressRecipes]);
 
   // useEffect(() => {
@@ -42,6 +42,11 @@ function DrinkObservations({ recipe, history }) {
   //       .map((element) => element === drinksId && setInProgress(true));
   //   }
   // }, [inProgressRecipes, drinksId]);
+
+  const handleOnClickButtonStartRecipe = () => {
+    // <Redirect to={ `/drinks/${drinksId}/in-progress` } />;
+    history.push(`/drinks/${drinksId}/in-progress`);
+  };
 
   const {
     idDrink,
