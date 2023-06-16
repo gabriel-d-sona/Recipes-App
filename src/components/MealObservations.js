@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import { useParams } from 'react-router-dom';
+import copy from 'clipboard-copy';
 import filterArrays from '../services/helpers/filterArrays';
 import requestApi from '../services/helpers/requestApi';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -15,7 +16,7 @@ function MealObservations({ recipe, history }) {
   const [drinks, setDrinks] = useState([]);
   const [isDone, setIsDone] = useState(false);
   const [inProgress, setInProgress] = useState(false);
-
+  const [isCopy, setIsCopy] = useState(false);
   const { mealsId } = recipeId;
 
   useEffect(() => {
@@ -43,6 +44,12 @@ function MealObservations({ recipe, history }) {
 
   const handleOnClickButtonStartRecipe = () => {
     history.push(`/meals/${mealsId}/in-progress`);
+  };
+
+  const handleOnClickButtonShare = () => {
+    const url = window.location.href;
+    copy(url);
+    setIsCopy(true);
   };
 
   const {
@@ -171,17 +178,24 @@ function MealObservations({ recipe, history }) {
         inProgress ? (
           <button
             data-testid="start-recipe-btn"
-            // className="btn-start-continue"
           >
             Continue Recipe
           </button>
         ) : null
       }
-      <button
-        data-testid="share-btn"
-      >
-        Share
-      </button>
+      <div>
+        <button
+          data-testid="share-btn"
+          onClick={ handleOnClickButtonShare }
+        >
+          Share
+        </button>
+        {
+          isCopy ? (
+            <h5>Link copied!</h5>
+          ) : null
+        }
+      </div>
 
       <button
         data-testid="favorite-btn"
