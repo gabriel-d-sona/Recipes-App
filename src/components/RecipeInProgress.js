@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
+import copy from 'clipboard-copy';
 
 function RecipeInProgress() {
   const [recipeDetails, setRecipeDetails] = useState({});
@@ -7,6 +8,7 @@ function RecipeInProgress() {
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
   const [checkedIngredients, setCheckedIngredients] = useState([]); // Estado para os ingredientes marcados
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const fetchRecipeDetails = async () => {
@@ -78,6 +80,11 @@ function RecipeInProgress() {
     );
   };
 
+  function handleCopy() {
+    copy(window.location.href.split('/in-progress')[0]);
+    setCopied(true);
+  }
+
   const ingredients = getIngredients(recipeDetails);
   // verifica se os ingredientes estão marcados
   const allIngredientsChecked = ingredients.length === checkedIngredients.length;
@@ -125,7 +132,12 @@ function RecipeInProgress() {
 
           <h2>Instruções</h2>
           <p data-testid="instructions">{recipeDetails.strInstructions}</p>
-          <button data-testid="share-btn">Compartilhar</button>
+          <button
+            data-testid="share-btn"
+            onClick={ handleCopy }
+          >
+            {!copied ? 'Share' : 'Link copied!'}
+          </button>
           <button data-testid="favorite-btn">Favoritar</button>
 
           <button data-testid="finish-recipe-btn" disabled={ !allIngredientsChecked }>
