@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import { useParams } from 'react-router-dom';
-import { Redirect } from 'react-router';
 import filterArrays from '../services/helpers/filterArrays';
 import requestApi from '../services/helpers/requestApi';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -43,7 +42,6 @@ function MealObservations({ recipe, history }) {
   }, [mealsId]);
 
   const handleOnClickButtonStartRecipe = () => {
-    // <Redirect to={ `/meals/${mealsId}/in-progress` } />;
     history.push(`/meals/${mealsId}/in-progress`);
   };
 
