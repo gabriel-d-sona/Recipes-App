@@ -14,9 +14,7 @@ const endPointForDrinks = 'https://www.thecocktaildb.com/api/json/v1/1/search.ph
 function MealObservations({ recipe, history }) {
   const recipeId = useParams();
   const [drinks, setDrinks] = useState([]);
-  const [doneRecipes, setDoneRecipes] = useState([]);
   const [isDone, setIsDone] = useState(false);
-  const [inProgressRecipes, setInProgressRecipes] = useState(null);
   const [inProgress, setInProgress] = useState(false);
 
   const { mealsId } = recipeId;
@@ -33,35 +31,22 @@ function MealObservations({ recipe, history }) {
 
   useEffect(() => {
     const done = getLocalStorage('doneRecipes');
-    setDoneRecipes(done);
-    const progress = getLocalStorage('inProgressRecipes');
-    setInProgressRecipes(progress);
-  }, [doneRecipes, inProgressRecipes]);
-
-  useEffect(() => {
-    if (doneRecipes) {
-      doneRecipes
+    if (done && done.length) {
+      done
         .map((element) => (element.id === mealsId && (setIsDone(true))));
     }
-    // if (inProgressRecipes.meals[mealsId]) {
-    //   Object.keys(inProgressRecipes.meals)
-    //     .map((element) => element === mealsId && setInProgress(true));
-    // }
-  }, [doneRecipes, mealsId, inProgressRecipes]);
-
-  // useEffect(() => {
-  //   if (inProgressRecipes) {
-  //     Object.keys(inProgressRecipes.meals)
-  //       .map((element) => element === mealsId && setInProgress(true));
-  //   }
-  // }, [inProgressRecipes, mealsId]);
+    const progress = getLocalStorage('inProgressRecipes');
+    if (progress && progress.meals) {
+      Object.keys(progress.meals)
+        .map((element) => element === mealsId && setInProgress(true));
+    }
+  }, [mealsId]);
 
   const handleOnClickButtonStartRecipe = () => {
     // <Redirect to={ `/meals/${mealsId}/in-progress` } />;
     history.push(`/meals/${mealsId}/in-progress`);
   };
 
-  console.log(history);
   const {
     strMealThumb,
     strMeal,
@@ -171,7 +156,7 @@ function MealObservations({ recipe, history }) {
       </Carousel>
 
       {
-        !isDone ? (
+        !isDone && !inProgress ? (
           <button
             data-testid="start-recipe-btn"
             className="btn-start-continue"
@@ -188,7 +173,7 @@ function MealObservations({ recipe, history }) {
         inProgress ? (
           <button
             data-testid="start-recipe-btn"
-            className="btn-start-continue"
+            // className="btn-start-continue"
           >
             Continue Recipe
           </button>

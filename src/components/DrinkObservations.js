@@ -14,9 +14,7 @@ const endPointForMeals = 'https://www.themealdb.com/api/json/v1/1/search.php?s='
 function DrinkObservations({ recipe, history }) {
   const recipeId = useParams();
   const [meals, setMeals] = useState([]);
-  const [doneRecipes, setDoneRecipes] = useState([]);
   const [isDone, setIsDone] = useState(false);
-  const [inProgressRecipes, setInProgressRecipes] = useState(null);
   const [inProgress, setInProgress] = useState(false);
 
   const { drinksId } = recipeId;
@@ -33,28 +31,16 @@ function DrinkObservations({ recipe, history }) {
 
   useEffect(() => {
     const done = getLocalStorage('doneRecipes');
-    setDoneRecipes(done);
-    const progress = getLocalStorage('inProgressRecipes');
-    setInProgressRecipes(progress);
-  }, [doneRecipes, inProgressRecipes]);
-
-  useEffect(() => {
-    if (doneRecipes) {
-      doneRecipes
+    if (done && done.length) {
+      done
         .map((element) => (element.id === drinksId && (setIsDone(true))));
     }
-    // if (inProgressRecipes.drinks[drinksId]) {
-    //   Object.keys(inProgressRecipes.drinks)
-    //     .map((element) => element === drinksId && setInProgress(true));
-    // }
-  }, [doneRecipes, drinksId, inProgressRecipes]);
-
-  // useEffect(() => {
-  //   if (inProgressRecipes) {
-  //     Object.keys(inProgressRecipes.drinks)
-  //       .map((element) => element === drinksId && setInProgress(true));
-  //   }
-  // }, [inProgressRecipes, drinksId]);
+    const progress = getLocalStorage('inProgressRecipes');
+    if (progress && progress.drinks) {
+      Object.keys(progress.drinks)
+        .map((element) => element === drinksId && setInProgress(true));
+    }
+  }, [drinksId]);
 
   const handleOnClickButtonStartRecipe = () => {
     // <Redirect to={ `/drinks/${drinksId}/in-progress` } />;
@@ -166,7 +152,7 @@ function DrinkObservations({ recipe, history }) {
         }
       </Carousel>
       {
-        !isDone ? (
+        !isDone && !inProgress ? (
           <button
             data-testid="start-recipe-btn"
             className="btn-start-continue"
@@ -183,7 +169,7 @@ function DrinkObservations({ recipe, history }) {
         inProgress ? (
           <button
             data-testid="start-recipe-btn"
-            className="btn-start-continue"
+            // className="btn-start-continue"
           >
             Continue Recipe
           </button>
