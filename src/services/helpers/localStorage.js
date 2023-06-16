@@ -1,4 +1,4 @@
-export const getLocalStorage = (string) => {
-  const data = localStorage.getItem(string);
-  return JSON.parse(data);
+export const getLocalStorage = (key) => {
+  const data = JSON.parse(localStorage.getItem(key));
+  return data;
 };
