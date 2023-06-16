@@ -38,7 +38,6 @@ function DrinkObservations({ recipe, history }) {
   }, [drinksId]);
 
   const handleOnClickButtonStartRecipe = () => {
-    // <Redirect to={ `/drinks/${drinksId}/in-progress` } />;
     history.push(`/drinks/${drinksId}/in-progress`);
   };
 

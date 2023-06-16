@@ -11,7 +11,6 @@ const urlDrinks = 'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=';
 function RecipeDetails({ history }) {
   const recipeId = useParams();
   const [recipe, setRecipe] = useState(null);
-  // const [doneRecipes, setDoneRecipes] = useState([]);
 
   useEffect(() => {
     const fetchById = async () => {
@@ -27,11 +26,6 @@ function RecipeDetails({ history }) {
 
     fetchById();
   }, []);
-
-  // useEffect(() => {
-  //   const data = getLocalStorage('doneRecipes');
-  //   setDoneRecipes(data);
-  // }, [doneRecipes]);
 
   return (
     <div>
