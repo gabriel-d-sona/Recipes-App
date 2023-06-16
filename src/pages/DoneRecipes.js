@@ -123,7 +123,7 @@ function DoneRecipes() {
                 doneDate={ recipe.doneDate }
                 nationality={ recipe.nationality }
                 tagName={ recipe.tags.slice(0, 2) }
-                handleClick={ () => handleShareClick(`/meals/:${recipe.id}/in-progress`) }
+                handleClick={ () => handleShareClick(`/meals/${recipe.id}`) }
                 handleDetailsClick={ () => handleDetailsClick(recipe.id, recipe.type) }
               />
             ))
@@ -137,7 +137,7 @@ function DoneRecipes() {
                 name={ recipe.name }
                 image={ recipe.image }
                 doneDate={ recipe.doneDate }
-                handleClick={ () => handleShareClick(`/meals/:${recipe.id}/in-progress`) }
+                handleClick={ () => handleShareClick(`/drinks/${recipe.id}`) }
                 handleDetailsClick={ () => handleDetailsClick(recipe.id, recipe.type) }
               />
             ))
