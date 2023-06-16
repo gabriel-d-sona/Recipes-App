@@ -50,7 +50,6 @@ function MealObservations({ recipe, history }) {
       done
         .map((element) => (element.id === mealsId && (setIsDone(true))));
     }
-
     const progress = getLocalStorage('inProgressRecipes');
     if (progress && progress.meals) {
       Object.keys(progress.meals)
