@@ -6,7 +6,7 @@ function RecipeInProgress() {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
-  const [checkedIngredients, setCheckedIngredients] = useState([]);
+  const [checkedIngredients, setCheckedIngredients] = useState([]); // Estado para os ingredientes marcados
 
   useEffect(() => {
     const fetchRecipeDetails = async () => {
@@ -79,6 +79,8 @@ function RecipeInProgress() {
   };
 
   const ingredients = getIngredients(recipeDetails);
+  // verifica se os ingredientes estão marcados
+  const allIngredientsChecked = ingredients.length === checkedIngredients.length;
 
   return (
     <div>
@@ -125,7 +127,10 @@ function RecipeInProgress() {
           <p data-testid="instructions">{recipeDetails.strInstructions}</p>
           <button data-testid="share-btn">Compartilhar</button>
           <button data-testid="favorite-btn">Favoritar</button>
-          <button data-testid="finish-recipe-btn">Finalizar Receita</button>
+
+          <button data-testid="finish-recipe-btn" disabled={ !allIngredientsChecked }>
+            Sua receita esta pronta!
+          </button>
         </>
       ) : (
         <p>Receita não encontrada</p>
