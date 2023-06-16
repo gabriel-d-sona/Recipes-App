@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import { useParams } from 'react-router-dom';
+import { Redirect } from 'react-router';
 import filterArrays from '../services/helpers/filterArrays';
 import requestApi from '../services/helpers/requestApi';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -10,7 +11,7 @@ import { getLocalStorage } from '../services/helpers/localStorage';
 import './btnStartAndContinue.css';
 
 const endPointForMeals = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
-function DrinkObservations({ recipe }) {
+function DrinkObservations({ recipe, history }) {
   const recipeId = useParams();
   const [meals, setMeals] = useState([]);
   const [doneRecipes, setDoneRecipes] = useState([]);
@@ -42,10 +43,10 @@ function DrinkObservations({ recipe }) {
       doneRecipes
         .map((element) => (element.id === drinksId && (setIsDone(true))));
     }
-    if (inProgressRecipes.drinks[drinksId]) {
-      Object.keys(inProgressRecipes.drinks)
-        .map((element) => element === drinksId && setInProgress(true));
-    }
+    // if (inProgressRecipes.drinks[drinksId]) {
+    //   Object.keys(inProgressRecipes.drinks)
+    //     .map((element) => element === drinksId && setInProgress(true));
+    // }
   }, [doneRecipes, drinksId, inProgressRecipes]);
 
   // useEffect(() => {
@@ -54,6 +55,11 @@ function DrinkObservations({ recipe }) {
   //       .map((element) => element === drinksId && setInProgress(true));
   //   }
   // }, [inProgressRecipes, drinksId]);
+
+  const handleOnClickButtonStartRecipe = () => {
+    // <Redirect to={ `/drinks/${drinksId}/in-progress` } />;
+    history.push(`/drinks/${drinksId}/in-progress`);
+  };
 
   const {
     idDrink,
@@ -164,6 +170,7 @@ function DrinkObservations({ recipe }) {
           <button
             data-testid="start-recipe-btn"
             className="btn-start-continue"
+            onClick={ handleOnClickButtonStartRecipe }
           >
             Start Recipe
           </button>
@@ -182,6 +189,17 @@ function DrinkObservations({ recipe }) {
           </button>
         ) : null
       }
+      <button
+        data-testid="share-btn"
+      >
+        Share
+      </button>
+
+      <button
+        data-testid="favorite-btn"
+      >
+        Favorite
+      </button>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import { useParams } from 'react-router-dom';
+import { Redirect } from 'react-router';
 import filterArrays from '../services/helpers/filterArrays';
 import requestApi from '../services/helpers/requestApi';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -10,7 +11,7 @@ import { getLocalStorage } from '../services/helpers/localStorage';
 import './btnStartAndContinue.css';
 
 const endPointForDrinks = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
-function MealObservations({ recipe }) {
+function MealObservations({ recipe, history }) {
   const recipeId = useParams();
   const [drinks, setDrinks] = useState([]);
   const [doneRecipes, setDoneRecipes] = useState([]);
@@ -25,7 +26,6 @@ function MealObservations({ recipe }) {
       const data = await requestApi(endPointForDrinks);
 
       setDrinks(data.drinks);
-      console.log('Oiii');
     };
 
     fetchApi();
@@ -43,10 +43,10 @@ function MealObservations({ recipe }) {
       doneRecipes
         .map((element) => (element.id === mealsId && (setIsDone(true))));
     }
-    if (inProgressRecipes.meals[mealsId]) {
-      Object.keys(inProgressRecipes.meals)
-        .map((element) => element === mealsId && setInProgress(true));
-    }
+    // if (inProgressRecipes.meals[mealsId]) {
+    //   Object.keys(inProgressRecipes.meals)
+    //     .map((element) => element === mealsId && setInProgress(true));
+    // }
   }, [doneRecipes, mealsId, inProgressRecipes]);
 
   // useEffect(() => {
@@ -56,6 +56,12 @@ function MealObservations({ recipe }) {
   //   }
   // }, [inProgressRecipes, mealsId]);
 
+  const handleOnClickButtonStartRecipe = () => {
+    // <Redirect to={ `/meals/${mealsId}/in-progress` } />;
+    history.push(`/meals/${mealsId}/in-progress`);
+  };
+
+  console.log(history);
   const {
     strMealThumb,
     strMeal,
@@ -169,6 +175,7 @@ function MealObservations({ recipe }) {
           <button
             data-testid="start-recipe-btn"
             className="btn-start-continue"
+            onClick={ handleOnClickButtonStartRecipe }
           >
             Start Recipe
           </button>
@@ -187,6 +194,17 @@ function MealObservations({ recipe }) {
           </button>
         ) : null
       }
+      <button
+        data-testid="share-btn"
+      >
+        Share
+      </button>
+
+      <button
+        data-testid="favorite-btn"
+      >
+        Favorite
+      </button>
     </div>
   );
 }

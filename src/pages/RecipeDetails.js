@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import requestApiByid from '../services/helpers/requestApiById';
@@ -7,7 +8,7 @@ import DrinkObservations from '../components/DrinkObservations';
 const urlMeals = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=';
 const urlDrinks = 'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=';
 
-function RecipeDetails() {
+function RecipeDetails({ history }) {
   const recipeId = useParams();
   const [recipe, setRecipe] = useState(null);
   // const [doneRecipes, setDoneRecipes] = useState([]);
@@ -39,9 +40,9 @@ function RecipeDetails() {
           <div>
             {
               recipeId.mealsId ? (
-                <MealObservations recipe={ recipe } />
+                <MealObservations recipe={ recipe } history={ history } />
               ) : (
-                <DrinkObservations recipe={ recipe } />
+                <DrinkObservations recipe={ recipe } history={ history } />
               )
             }
           </div>
@@ -53,5 +54,9 @@ function RecipeDetails() {
     </div>
   );
 }
+
+RecipeDetails.propTypes = {
+  history: PropTypes.shape({}),
+}.isRequired;
 
 export default RecipeDetails;
