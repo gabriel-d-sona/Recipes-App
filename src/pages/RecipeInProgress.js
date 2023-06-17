@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 function RecipeInProgress() {
   const history = useHistory();
   const [recipeDetails, setRecipeDetails] = useState({});
+  const [cloneDetails, setCloneDetails] = useState([]);
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
@@ -18,12 +19,13 @@ function RecipeInProgress() {
         : `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
       const response = await fetch(apiUrl);
       const data = await response.json();
-      if (data.meals || data.drinks) {
-        setRecipeDetails(data.meals ? data.meals[0] : data.drinks[0]);
-      }
+      setCloneDetails(data.meals ? [data.meals[0]] : [data.drinks[0]]);
+      setRecipeDetails(data.meals ? data.meals[0] : data.drinks[0]);
+      console.log(cloneDetails);
       setIsLoading(false);
     };
     fetchRecipeDetails();
+
     // Verifica localStorage
     const savedProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
     const isDrinkRoute = location.pathname.includes('/drinks/');
@@ -75,6 +77,29 @@ function RecipeInProgress() {
   };
 
   function handleMadeRecipe() {
+    const recipe = {
+      id: cloneDetails[0].idMeal ? cloneDetails[0].idMeal : cloneDetails[0].idDrink,
+      type: cloneDetails[0].idMeal ? 'meal' : 'drink',
+      nationality: cloneDetails[0].idMeal ? cloneDetails[0].strArea : '',
+      category: cloneDetails[0].strCategory,
+      alcoholicOrNot: cloneDetails[0].idMeal ? '' : cloneDetails[0].strAlcoholic,
+      name: cloneDetails[0].idMeal ? cloneDetails[0].strMeal : cloneDetails[0].strDrink,
+      image: cloneDetails[0].idMeal ? cloneDetails[0].strMealThumb
+        : cloneDetails[0].strDrinkThumb,
+      doneDate: JSON.stringify(new Date()),
+      tags: cloneDetails[0].strTags ? cloneDetails[0].strTags : '',
+    };
+
+    const savedItem = JSON.parse(localStorage.getItem('doneRecipes'));
+    const arr = [];
+    if (savedItem) {
+      const array = savedItem;
+      array.push(recipe);
+      localStorage.setItem('doneRecipes', JSON.stringify(array));
+    } else {
+      arr.push(recipe);
+      localStorage.setItem('doneRecipes', JSON.stringify(arr));
+    }
     history.push('/done-recipes');
   }
 

@@ -7,30 +7,9 @@ import { DoneDrinkCard } from '../components/doneDrinkCard';
 function DoneRecipes() {
   const history = useHistory();
 
-  const genericDoneRecipes = [{
-    id: 'id-da-receita',
-    type: 'meal',
-    nationality: 'nacionalidade-da-receita-ou-texto-vazio',
-    category: 'categoria-da-receita-ou-texto-vazio',
-    alcoholicOrNot: 'alcoholic-ou-non-alcoholic-ou-texto-vazio',
-    name: 'nome-da-receita',
-    image: 'imagem-da-receita',
-    doneDate: 'quando-a-receita-foi-concluida',
-    tags: ['Pasta', 'Curry', 'test'],
-  },
-  {
-    id: 'id-da-receita',
-    type: 'drink',
-    nationality: 'nacionalidade-da-receita-ou-texto-vazio',
-    category: 'categoria-da-receita-ou-texto-vazio',
-    alcoholicOrNot: 'alcoholic-ou-non-alcoholic-ou-texto-vazio',
-    name: 'nome-da-receita',
-    image: 'imagem-da-receita',
-    doneDate: 'quando-a-receita-foi-concluida',
-    tags: [],
-  }];
-
-  const [doneRecipes, setDoneRecipes] = useState(genericDoneRecipes);
+  const recipes = JSON.parse(localStorage.getItem('doneRecipes'));
+  const [doneRecipes, setDoneRecipes] = useState(recipes);
+  console.log(doneRecipes);
   const [handleCheckbox, setHandleCheckBox] = useState({ meals: false, drinks: false });
 
   function handleShareClick(id) {
@@ -58,20 +37,20 @@ function DoneRecipes() {
     }
     if (!checked) {
       setHandleCheckBox({ [value]: false });
-      setDoneRecipes(genericDoneRecipes);
+      setDoneRecipes(recipes);
     }
 
     if (value === 'All') {
       setHandleCheckBox({ drinks: false, meals: false });
-      setDoneRecipes(genericDoneRecipes);
+      setDoneRecipes(recipes);
     }
   }
 
   function handleDetailsClick(id, type) {
     if (type === 'meal') {
-      history.push(`/meals/:${id}/in-progress`);
+      history.push(`/meals/${id}`);
     } else {
-      history.push(`/drinks/:${id}/in-progress`);
+      history.push(`/drinks/${id}`);
     }
   }
 
@@ -87,7 +66,7 @@ function DoneRecipes() {
             checked={ handleCheckbox.meals }
             type="checkbox"
             value="meals"
-            data-testid="filter-by-meals-btn"
+            data-testid="filter-by-meal-btn"
             onChange={ (e) => handleFilterClick(e) }
           />
         </label>
@@ -122,7 +101,7 @@ function DoneRecipes() {
                 category={ recipe.category }
                 doneDate={ recipe.doneDate }
                 nationality={ recipe.nationality }
-                tagName={ recipe.tags.slice(0, 2) }
+                tagName={ recipe.tags }
                 handleClick={ () => handleShareClick(`/meals/${recipe.id}`) }
                 handleDetailsClick={ () => handleDetailsClick(recipe.id, recipe.type) }
               />

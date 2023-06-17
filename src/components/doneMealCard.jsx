@@ -42,10 +42,7 @@ export function DoneMealCard(props) {
       <p
         data-testid={ `${index}-${tagName}-horizontal-tag` }
       >
-        { tagName }
-      </p>
-      <p>
-        { nationality }
+        { `${nationality} - ${tagName}` }
       </p>
       <br />
       <button
