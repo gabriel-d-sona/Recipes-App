@@ -7,8 +7,9 @@ import filterArrays from '../services/helpers/filterArrays';
 import requestApi from '../services/helpers/requestApi';
 import 'bootstrap/dist/css/bootstrap.css';
 import './carousel.css';
-import { getLocalStorage } from '../services/helpers/localStorage';
+import { getLocalStorage, setLocalStorage } from '../services/helpers/localStorage';
 import './btnStartAndContinue.css';
+import './btnFavoriteRecipe.css';
 
 const endPointForDrinks = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
 function MealObservations({ recipe, history }) {
@@ -18,6 +19,20 @@ function MealObservations({ recipe, history }) {
   const [inProgress, setInProgress] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
   const { mealsId } = recipeId;
+
+  const {
+    strMealThumb,
+    strMeal,
+    strCategory,
+    strInstructions,
+    strYoutube,
+    strArea,
+  } = recipe[0];
+
+  const strIngredients = filterArrays(recipe[0], 'strIngredient');
+  const strMeasures = filterArrays(recipe[0], 'strMeasure');
+
+  const six = 6;
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -35,6 +50,7 @@ function MealObservations({ recipe, history }) {
       done
         .map((element) => (element.id === mealsId && (setIsDone(true))));
     }
+
     const progress = getLocalStorage('inProgressRecipes');
     if (progress && progress.meals) {
       Object.keys(progress.meals)
@@ -52,18 +68,25 @@ function MealObservations({ recipe, history }) {
     setIsCopy(true);
   };
 
-  const {
-    strMealThumb,
-    strMeal,
-    strCategory,
-    strInstructions,
-    strYoutube,
-  } = recipe[0];
-
-  const strIngredients = filterArrays(recipe[0], 'strIngredient');
-  const strMeasures = filterArrays(recipe[0], 'strMeasure');
-
-  const six = 6;
+  const handleOnClickButtonFavorite = () => {
+    const favoriteRecipe = {
+      id: mealsId,
+      type: 'meal',
+      nationality: strArea,
+      category: strCategory,
+      alcoholicOrNot: '',
+      name: strMeal,
+      image: strMealThumb,
+    };
+    const favoritesRecipes = getLocalStorage('favoriteRecipes');
+    if (favoritesRecipes && favoritesRecipes.length > 0) {
+      const newFavoritesRecipes = [...favoritesRecipes];
+      newFavoritesRecipes.push(favoriteRecipe);
+      setLocalStorage('favoriteRecipes', newFavoritesRecipes);
+    } else {
+      setLocalStorage('favoriteRecipes', [favoriteRecipe]);
+    }
+  };
 
   return (
     <div
@@ -174,34 +197,39 @@ function MealObservations({ recipe, history }) {
         )
       }
 
-      {
-        inProgress ? (
-          <button
-            data-testid="start-recipe-btn"
-          >
-            Continue Recipe
-          </button>
-        ) : null
-      }
-      <div>
-        <button
-          data-testid="share-btn"
-          onClick={ handleOnClickButtonShare }
-        >
-          Share
-        </button>
+      <div
+        className="container-btns"
+      >
         {
-          isCopy ? (
-            <h5>Link copied!</h5>
+          inProgress ? (
+            <button
+              data-testid="start-recipe-btn"
+            >
+              Continue Recipe
+            </button>
           ) : null
         }
-      </div>
+        <div>
+          <button
+            data-testid="share-btn"
+            onClick={ handleOnClickButtonShare }
+          >
+            Share
+          </button>
+          {
+            isCopy ? (
+              <h5>Link copied!</h5>
+            ) : null
+          }
+        </div>
 
-      <button
-        data-testid="favorite-btn"
-      >
-        Favorite
-      </button>
+        <button
+          data-testid="favorite-btn"
+          onClick={ handleOnClickButtonFavorite }
+        >
+          Favorite
+        </button>
+      </div>
     </div>
   );
 }

@@ -7,8 +7,9 @@ import filterArrays from '../services/helpers/filterArrays';
 import requestApi from '../services/helpers/requestApi';
 import 'bootstrap/dist/css/bootstrap.css';
 import './carousel.css';
-import { getLocalStorage } from '../services/helpers/localStorage';
+import { getLocalStorage, setLocalStorage } from '../services/helpers/localStorage';
 import './btnStartAndContinue.css';
+import './btnFavoriteRecipe.css';
 
 const endPointForMeals = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
 function DrinkObservations({ recipe, history }) {
@@ -18,6 +19,20 @@ function DrinkObservations({ recipe, history }) {
   const [inProgress, setInProgress] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
   const { drinksId } = recipeId;
+
+  const {
+    idDrink,
+    strDrink,
+    strDrinkThumb,
+    strCategory,
+    strAlcoholic,
+    strInstructions,
+  } = recipe[0];
+
+  const strIngredients = filterArrays(recipe[0], 'strIngredient');
+  const strMeasures = filterArrays(recipe[0], 'strMeasure');
+
+  const six = 6;
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -52,19 +67,25 @@ function DrinkObservations({ recipe, history }) {
     setIsCopy(true);
   };
 
-  const {
-    idDrink,
-    strDrink,
-    strDrinkThumb,
-    strCategory,
-    strAlcoholic,
-    strInstructions,
-  } = recipe[0];
-
-  const strIngredients = filterArrays(recipe[0], 'strIngredient');
-  const strMeasures = filterArrays(recipe[0], 'strMeasure');
-
-  const six = 6;
+  const handleOnClickButtonFavorite = () => {
+    const favoriteRecipe = {
+      id: drinksId,
+      type: 'drink',
+      nationality: '',
+      category: strCategory,
+      alcoholicOrNot: strAlcoholic,
+      name: strDrink,
+      image: strDrinkThumb,
+    };
+    const favoritesRecipes = getLocalStorage('favoriteRecipes');
+    if (favoritesRecipes && favoritesRecipes.length > 0) {
+      const newFavoritesRecipes = [...favoritesRecipes];
+      newFavoritesRecipes.push(favoriteRecipe);
+      setLocalStorage('favoriteRecipes', newFavoritesRecipes);
+    } else {
+      setLocalStorage('favoriteRecipes', [favoriteRecipe]);
+    }
+  };
 
   return (
     <div
@@ -169,36 +190,41 @@ function DrinkObservations({ recipe, history }) {
           null
         )
       }
-
-      {
-        inProgress ? (
-          <button
-            data-testid="start-recipe-btn"
-          >
-            Continue Recipe
-          </button>
-        ) : null
-      }
-      <div>
-
-        <button
-          data-testid="share-btn"
-          onClick={ handleOnClickButtonShare }
-        >
-          Share
-        </button>
+      <div
+        className="container-btns"
+      >
         {
-          isCopy ? (
-            <h5>Link copied!</h5>
+          inProgress ? (
+            <button
+              data-testid="start-recipe-btn"
+            >
+              Continue Recipe
+            </button>
           ) : null
         }
-      </div>
+        <div>
 
-      <button
-        data-testid="favorite-btn"
-      >
-        Favorite
-      </button>
+          <button
+            data-testid="share-btn"
+            onClick={ handleOnClickButtonShare }
+          >
+            Share
+          </button>
+          {
+            isCopy ? (
+              <h5>Link copied!</h5>
+            ) : null
+          }
+        </div>
+
+        <button
+          data-testid="favorite-btn"
+          className="favorite-btn"
+          onClick={ handleOnClickButtonFavorite }
+        >
+          Favorite
+        </button>
+      </div>
     </div>
   );
 }
