@@ -20,6 +20,20 @@ function DrinkObservations({ recipe, history }) {
   const [isCopy, setIsCopy] = useState(false);
   const { drinksId } = recipeId;
 
+  const {
+    idDrink,
+    strDrink,
+    strDrinkThumb,
+    strCategory,
+    strAlcoholic,
+    strInstructions,
+  } = recipe[0];
+
+  const strIngredients = filterArrays(recipe[0], 'strIngredient');
+  const strMeasures = filterArrays(recipe[0], 'strMeasure');
+
+  const six = 6;
+
   useEffect(() => {
     const data = getLocalStorage('doneRecipes');
     setDoneRecipes(data);
