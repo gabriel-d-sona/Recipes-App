@@ -27,9 +27,9 @@ export default function Recipes() {
       fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
         .then((response) => response.json())
         .then(({ meals }) => {
+          console.log(meals);
           const treatedDataForRecipes = meals.slice(0, MN1);
           setRecipes(treatedDataForRecipes);
-          console.log(meals);
           setFilteredRecipes(treatedDataForRecipes);
         });
       // Segundo fetch de meals feito em um endpoint diferente para renderização dos botões de filtragem de catégoria
@@ -43,9 +43,9 @@ export default function Recipes() {
       fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=')
         .then((response) => response.json())
         .then(({ drinks }) => {
+          console.log(drinks);
           const treatedDataForRecipes = drinks.slice(0, MN1);
           setRecipes(treatedDataForRecipes);
-          console.log(recipes);
           setFilteredRecipes(treatedDataForRecipes);
         });
       // Segundo fetch de drinks feito em um endpoint diferente para renderização dos botões de filtragem de catégoria
@@ -62,6 +62,7 @@ export default function Recipes() {
   // E por fim fazer com que se caso o botão clicado esteja sendo desmarcado seja renderizada a end point inicial que é renderizada quando dando o primeiro load na tela.
   function handleClick({ target }) {
     const { value, checked } = target;
+    console.log(value);
     // verifica se a rota é /meals e se o botão com quem o usuario está interajindo está marcado.
     if (isMealRoute && checked) {
       fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${value}`)
@@ -85,13 +86,12 @@ export default function Recipes() {
     }
   }
 
-  function handleDetailsClick({ target }) {
-    const { value } = target;
-    console.log(value);
+  function handleDetailsClick(id) {
+    console.log(id);
     if (isMealRoute) {
-      history.push(`/meals/:${value}`);
+      history.push(`/meals/${id}`);
     } else {
-      history.push(`/drinks/:${value}`);
+      history.push(`/drinks/${id}`);
     }
   }
 
@@ -126,7 +126,7 @@ export default function Recipes() {
             imgSrc={ recipe.strMealThumb }
             SrcIndex={ i }
             id={ recipe.idMeal }
-            handleDetailsClick={ (e) => handleDetailsClick(e) }
+            handleDetailsClick={ () => handleDetailsClick(recipe.idMeal) }
           />
         )) : recipes.map((recipe, i) => (
           <Card
@@ -135,7 +135,7 @@ export default function Recipes() {
             imgSrc={ recipe.strDrinkThumb }
             SrcIndex={ i }
             id={ recipe.idDrink }
-            handleDetailsClick={ (e) => handleDetailsClick(e) }
+            handleDetailsClick={ () => handleDetailsClick(recipe.idDrink) }
           />
         ))}
       </main>
