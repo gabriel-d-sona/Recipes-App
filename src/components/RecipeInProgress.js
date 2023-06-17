@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import copy from 'clipboard-copy';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 function RecipeInProgress() {
   const [recipeDetails, setRecipeDetails] = useState({});
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
-  const [checkedIngredients, setCheckedIngredients] = useState([]); // Estado para os ingredientes marcados
-  const [copied, setCopied] = useState(false);
+  const [checkedIngredients, setCheckedIngredients] = useState([]);
+  const [copied, setCopied] = useState(false); // Estado para os ingredientes marcados
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     const fetchRecipeDetails = async () => {
@@ -24,17 +27,22 @@ function RecipeInProgress() {
       }
       setIsLoading(false);
     };
+
     fetchRecipeDetails();
 
     // Verifica localStorage
     const savedProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
     const isDrinkRoute = location.pathname.includes('/drinks/');
     const recipeType = isDrinkRoute ? 'drinks' : 'meals';
-    // recipe type ABENÇOADO NAO ESTAVA VERIFICADO NO LOCALSTORAGE
+
     if (savedProgress && savedProgress[recipeType] && savedProgress[recipeType][id]) {
       setCheckedIngredients(savedProgress[recipeType][id]);
-    // correção do saveProgress[recipeType][id] para acessar os ingredientes no localstorage
     }
+
+    // Verifica se a receita está favoritada
+    const savedFavorites = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
+    const isFavoriteRecipe = savedFavorites.some((recipe) => recipe.id === id);
+    setIsFavorite(isFavoriteRecipe);
   }, [id, location]);
 
   if (isLoading) return <div>Loading...</div>;
@@ -63,9 +71,10 @@ function RecipeInProgress() {
     setCheckedIngredients(newCheckedIngredients);
 
     // Atualiza o localStorage
-    const savedProgress = JSON.parse(
-      localStorage.getItem('inProgressRecipes'),
-    ) || { drinks: {}, meals: {} };
+    const savedProgress = JSON.parse(localStorage.getItem('inProgressRecipes')) || {
+      drinks: {},
+      meals: {},
+    };
     const isDrinkRoute = location.pathname.includes('/drinks/');
     const recipeType = isDrinkRoute ? 'drinks' : 'meals';
     localStorage.setItem(
@@ -79,6 +88,33 @@ function RecipeInProgress() {
       }),
     );
   };
+
+  function handleFavorite() {
+    const savedFavorites = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
+    const isFavoriteRecipe = savedFavorites.some((recipe) => recipe.id === id);
+
+    if (isFavoriteRecipe) {
+      // Remove a receita dos favoritos
+      const updatedFavorites = savedFavorites.filter((recipe) => recipe.id !== id);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(updatedFavorites));
+      setIsFavorite(false);
+    } else {
+      // Adiciona a receita aos favoritos
+      const isDrinkRoute = location.pathname.includes('/drinks/');
+      const favoriteRecipe = {
+        id,
+        type: isDrinkRoute ? 'drink' : 'meal',
+        nationality: recipeDetails.strArea || '',
+        category: recipeDetails.strCategory || '',
+        alcoholicOrNot: recipeDetails.strAlcoholic || '',
+        name: recipeDetails.strMeal || recipeDetails.strDrink,
+        image: recipeDetails.strMealThumb || recipeDetails.strDrinkThumb,
+      };
+      const updatedFavorites = [...savedFavorites, favoriteRecipe];
+      localStorage.setItem('favoriteRecipes', JSON.stringify(updatedFavorites));
+      setIsFavorite(true);
+    }
+  }
 
   function handleCopy() {
     copy(window.location.href.split('/in-progress')[0]);
@@ -96,11 +132,14 @@ function RecipeInProgress() {
         <>
           <img
             src={ recipeDetails.strMealThumb || recipeDetails.strDrinkThumb }
-            alt="Receita a ser fe"
+            alt="Receita a ser feita"
             data-testid="recipe-photo"
           />
           <h2 data-testid="recipe-title">
-            {recipeDetails.strMeal || recipeDetails.strDrink}
+            {
+              recipeDetails.strMeal || recipeDetails.strDrink
+            }
+
           </h2>
           <h2 data-testid="recipe-category">
             {recipeDetails.strCategory || recipeDetails.strAlcoholic}
@@ -132,16 +171,23 @@ function RecipeInProgress() {
 
           <h2>Instruções</h2>
           <p data-testid="instructions">{recipeDetails.strInstructions}</p>
-          <button
-            data-testid="share-btn"
-            onClick={ handleCopy }
-          >
+          <button data-testid="share-btn" onClick={ handleCopy }>
             {!copied ? 'Share' : 'Link copied!'}
           </button>
-          <button data-testid="favorite-btn">Favoritar</button>
+          <button
+            onClick={ handleFavorite }
+            data-testid="favorite-btn"
+            src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+            type="button"
+          >
+            <img
+              src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+              alt="favorite"
+            />
+          </button>
 
           <button data-testid="finish-recipe-btn" disabled={ !allIngredientsChecked }>
-            Sua receita esta pronta!
+            Sua receita está pronta!
           </button>
         </>
       ) : (
@@ -150,6 +196,5 @@ function RecipeInProgress() {
     </div>
   );
 }
-// deu
 
 export default RecipeInProgress;
