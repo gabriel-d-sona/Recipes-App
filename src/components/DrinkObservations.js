@@ -35,41 +35,6 @@ function DrinkObservations({ recipe, history }) {
   const six = 6;
 
   useEffect(() => {
-    const data = getLocalStorage('doneRecipes');
-    setDoneRecipes(data);
-  }, [doneRecipes]);
-
-  useEffect(() => {
-    if (doneRecipes) {
-      doneRecipes
-        .map((element) => (element.id === drinksId && (setIsDone(true))));
-    }
-    const progress = getLocalStorage('inProgressRecipes');
-    if (progress && progress.drinks) {
-      Object.keys(progress.drinks)
-        .map((element) => element === drinksId && setInProgress(true));
-    }
-  }, [drinksId]);
-
-  const handleOnClickButtonStartRecipe = () => {
-    history.push(`/drinks/${drinksId}/in-progress`);
-  };
-
-  const {
-    idDrink,
-    strDrink,
-    strDrinkThumb,
-    strCategory,
-    strAlcoholic,
-    strInstructions,
-  } = recipe[0];
-
-  const strIngredients = filterArrays(recipe[0], 'strIngredient');
-  const strMeasures = filterArrays(recipe[0], 'strMeasure');
-
-  const six = 6;
-
-  useEffect(() => {
     const fetchApi = async () => {
       const data = await requestApi(endPointForMeals);
 
