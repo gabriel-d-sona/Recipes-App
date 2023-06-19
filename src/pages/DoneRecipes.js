@@ -1,25 +1,24 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import Header from '../components/Header';
-import { DoneMealCard } from '../components/doneMealCard';
-import { DoneDrinkCard } from '../components/doneDrinkCard';
+import RecipeCard from '../components/RecipeCard';
 
 function DoneRecipes() {
   const history = useHistory();
-
   const recipes = JSON.parse(localStorage.getItem('doneRecipes'));
+  console.log(recipes);
   const [doneRecipes, setDoneRecipes] = useState(recipes);
-  console.log(doneRecipes);
   const [handleCheckbox, setHandleCheckBox] = useState({ meals: false, drinks: false });
+  const [copy, setCopy] = useState(false);
 
-  function handleShareClick(id) {
-    const tempInput = document.createElement('input');
-    tempInput.value = id;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand('copy');
-    document.body.removeChild(tempInput);
-    alert('Link copied!');
+  async function handleShareClick(id, type) {
+    console.log(type);
+    if (type === 'meal') {
+      await navigator.clipboard.writeText(`http://localhost:3000/meals/${id}`);
+    } else {
+      await navigator.clipboard.writeText(`http://localhost:3000/drinks/${id}`);
+    }
+    setCopy(true);
   }
 
   function handleFilterClick({ target }) {
@@ -90,40 +89,30 @@ function DoneRecipes() {
         </button>
         <br />
         <br />
-        {
-          doneRecipes.filter((e) => e.type === 'meal')
-            .map((recipe, i) => (
-              <DoneMealCard
-                key={ recipe.name }
-                index={ i }
-                name={ recipe.name }
-                image={ recipe.image }
-                category={ recipe.category }
-                doneDate={ recipe.doneDate }
-                nationality={ recipe.nationality }
-                tagName={ recipe.tags }
-                handleClick={ () => handleShareClick(`/meals/${recipe.id}`) }
-                handleDetailsClick={ () => handleDetailsClick(recipe.id, recipe.type) }
-              />
-            ))
-        }
-        {
-          doneRecipes.filter((e) => e.type === 'drink')
-            .map((recipe, i) => (
-              <DoneDrinkCard
-                key={ recipe.name }
-                index={ i }
-                name={ recipe.name }
-                image={ recipe.image }
-                doneDate={ recipe.doneDate }
-                handleClick={ () => handleShareClick(`/drinks/${recipe.id}`) }
-                handleDetailsClick={ () => handleDetailsClick(recipe.id, recipe.type) }
-              />
-            ))
-        }
+        { doneRecipes.map((recipe, i) => (
+          <RecipeCard
+            doneDate={ recipe.doneDate }
+            key={ recipe.name }
+            name={ recipe.name }
+            type={ recipe.type }
+            index={ i }
+            isAlcoholic={ recipe.alcoholicOrNot }
+            image={ recipe.image }
+            category={ recipe.category }
+            nationality={ recipe.nationality }
+            tagName1={ recipe.tags[0] }
+            tagName2={ recipe.tags[1] }
+            handleDetailsClick={ () => handleDetailsClick(recipe.id, recipe.type) }
+            handleClick={ () => handleShareClick(recipe.id, recipe.type) }
+          />
+        )) }
+        { copy && (
+          <span>
+            Link copied!
+          </span>
+        ) }
       </main>
     </div>
   );
 }
-
 export default DoneRecipes;

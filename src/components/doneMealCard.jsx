@@ -8,7 +8,8 @@ export function DoneMealCard(props) {
     category,
     index,
     doneDate,
-    tagName,
+    tagName1,
+    tagName2,
     nationality,
     handleClick,
     handleDetailsClick } = props;
@@ -32,6 +33,8 @@ export function DoneMealCard(props) {
         onClick={ handleDetailsClick }
         alt={ name }
         src={ image }
+        width={ 250 }
+        height={ 200 }
         data-testid={ `${index}-horizontal-image` }
       />
       <p
@@ -40,9 +43,9 @@ export function DoneMealCard(props) {
         { `Essa receita foi feita em: ${doneDate}` }
       </p>
       <p
-        data-testid={ `${index}-${tagName}-horizontal-tag` }
+        data-testid={ `${index}-${tagName1}-horizontal-tag` }
       >
-        { `${nationality} - ${tagName}` }
+        { `${nationality} - ${tagName1} - ${tagName2}` }
       </p>
       <br />
       <button

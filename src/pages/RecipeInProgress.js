@@ -86,8 +86,9 @@ function RecipeInProgress() {
       name: cloneDetails[0].idMeal ? cloneDetails[0].strMeal : cloneDetails[0].strDrink,
       image: cloneDetails[0].idMeal ? cloneDetails[0].strMealThumb
         : cloneDetails[0].strDrinkThumb,
-      doneDate: JSON.stringify(new Date()),
-      tags: cloneDetails[0].strTags ? cloneDetails[0].strTags : '',
+      doneDate: new Date().toLocaleDateString('pt-BR'),
+      tags: cloneDetails[0].strTags
+        ? cloneDetails[0].strTags.split(',').map((item) => item.trim()) : [],
     };
 
     const savedItem = JSON.parse(localStorage.getItem('doneRecipes'));
@@ -152,6 +153,7 @@ function RecipeInProgress() {
           <button data-testid="share-btn">Compartilhar</button>
           <button data-testid="favorite-btn">Favoritar</button>
           <button
+            // disabled={ isDisabled }
             onClick={ () => handleMadeRecipe() }
             data-testid="finish-recipe-btn"
             disabled={ !allIngredientsChecked }
