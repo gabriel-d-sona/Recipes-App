@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import copy from 'clipboard-copy';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 function RecipeInProgress() {
+  const history = useHistory();
   const [recipeDetails, setRecipeDetails] = useState({});
+  const [cloneDetails, setCloneDetails] = useState([]);
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
   const [checkedIngredients, setCheckedIngredients] = useState([]); // Estado para os ingredientes marcados
-  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const fetchRecipeDetails = async () => {
@@ -16,12 +17,11 @@ function RecipeInProgress() {
       const apiUrl = isDrinkRoute
         ? `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`
         : `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
-
       const response = await fetch(apiUrl);
       const data = await response.json();
-      if (data.meals || data.drinks) {
-        setRecipeDetails(data.meals ? data.meals[0] : data.drinks[0]);
-      }
+      setCloneDetails(data.meals ? [data.meals[0]] : [data.drinks[0]]);
+      setRecipeDetails(data.meals ? data.meals[0] : data.drinks[0]);
+      console.log(cloneDetails);
       setIsLoading(false);
     };
     fetchRecipeDetails();
@@ -36,11 +36,8 @@ function RecipeInProgress() {
     // correção do saveProgress[recipeType][id] para acessar os ingredientes no localstorage
     }
   }, [id, location]);
-
   if (isLoading) return <div>Loading...</div>;
-
   const MAX_INGREDIENTS = 50;
-
   const getIngredients = (recipe) => {
     const ingredients = [];
     for (let index = 1; index <= MAX_INGREDIENTS; index += 1) {
@@ -61,7 +58,6 @@ function RecipeInProgress() {
       newCheckedIngredients.push(index);
     }
     setCheckedIngredients(newCheckedIngredients);
-
     // Atualiza o localStorage
     const savedProgress = JSON.parse(
       localStorage.getItem('inProgressRecipes'),
@@ -80,9 +76,31 @@ function RecipeInProgress() {
     );
   };
 
-  function handleCopy() {
-    copy(window.location.href.split('/in-progress')[0]);
-    setCopied(true);
+  function handleMadeRecipe() {
+    const recipe = {
+      id: cloneDetails[0].idMeal ? cloneDetails[0].idMeal : cloneDetails[0].idDrink,
+      type: cloneDetails[0].idMeal ? 'meal' : 'drink',
+      nationality: cloneDetails[0].idMeal ? cloneDetails[0].strArea : '',
+      category: cloneDetails[0].strCategory,
+      alcoholicOrNot: cloneDetails[0].idMeal ? '' : cloneDetails[0].strAlcoholic,
+      name: cloneDetails[0].idMeal ? cloneDetails[0].strMeal : cloneDetails[0].strDrink,
+      image: cloneDetails[0].idMeal ? cloneDetails[0].strMealThumb
+        : cloneDetails[0].strDrinkThumb,
+      doneDate: JSON.stringify(new Date()),
+      tags: cloneDetails[0].strTags ? cloneDetails[0].strTags : '',
+    };
+
+    const savedItem = JSON.parse(localStorage.getItem('doneRecipes'));
+    const arr = [];
+    if (savedItem) {
+      const array = savedItem;
+      array.push(recipe);
+      localStorage.setItem('doneRecipes', JSON.stringify(array));
+    } else {
+      arr.push(recipe);
+      localStorage.setItem('doneRecipes', JSON.stringify(arr));
+    }
+    history.push('/done-recipes');
   }
 
   const ingredients = getIngredients(recipeDetails);
@@ -129,18 +147,15 @@ function RecipeInProgress() {
               </li>
             ))}
           </ul>
-
           <h2>Instruções</h2>
           <p data-testid="instructions">{recipeDetails.strInstructions}</p>
-          <button
-            data-testid="share-btn"
-            onClick={ handleCopy }
-          >
-            {!copied ? 'Share' : 'Link copied!'}
-          </button>
+          <button data-testid="share-btn">Compartilhar</button>
           <button data-testid="favorite-btn">Favoritar</button>
-
-          <button data-testid="finish-recipe-btn" disabled={ !allIngredientsChecked }>
+          <button
+            onClick={ () => handleMadeRecipe() }
+            data-testid="finish-recipe-btn"
+            disabled={ !allIngredientsChecked }
+          >
             Sua receita esta pronta!
           </button>
         </>
@@ -150,5 +165,4 @@ function RecipeInProgress() {
     </div>
   );
 }
-
 export default RecipeInProgress;
