@@ -5,6 +5,7 @@ import FavoriteRecipes from '../pages/FavoriteRecipes';
 jest.mock('../components/Header', () => function MockedHeader() {
   return <div data-testid="mocked-header" />;
 });
+
 const storedRecipes = [
   {
     id: 1,
