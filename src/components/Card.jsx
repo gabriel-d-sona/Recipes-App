@@ -4,7 +4,12 @@ import PropTypes from 'prop-types';
 export function Card(props) {
   const { name, imgSrc, SrcIndex, handleDetailsClick, id } = props;
   return (
-    <div data-testid={ `${SrcIndex}-recipe-card` }>
+    <div
+      role="presentation"
+      value={ id }
+      onClick={ handleDetailsClick }
+      data-testid={ `${SrcIndex}-recipe-card` }
+    >
       <h3
         data-testid={ `${SrcIndex}-card-name` }
       >
@@ -16,12 +21,6 @@ export function Card(props) {
         data-testid={ `${SrcIndex}-card-img` }
       />
       <br />
-      <button
-        value={ id }
-        onClick={ handleDetailsClick }
-      >
-        Detalhes
-      </button>
     </div>
   );
 }
