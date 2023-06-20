@@ -118,31 +118,27 @@ export function RecipeInProgress() {
     copy(window.location.href.split('/in-progress')[0]);
     setCopied(true);
   }
+
   function handleMadeRecipe() {
     const recipe = {
       id: cloneDetails[0].idMeal ? cloneDetails[0].idMeal : cloneDetails[0].idDrink,
-      type: cloneDetails[0].idMeal ? 'meal' : 'drink',
       nationality: cloneDetails[0].idMeal ? cloneDetails[0].strArea : '',
+      type: cloneDetails[0].idMeal ? 'meal' : 'drink',
       category: cloneDetails[0].strCategory,
       alcoholicOrNot: cloneDetails[0].idMeal ? '' : cloneDetails[0].strAlcoholic,
       name: cloneDetails[0].idMeal ? cloneDetails[0].strMeal : cloneDetails[0].strDrink,
-      image: cloneDetails[0].idMeal ? cloneDetails[0].strMealThumb
-        : cloneDetails[0].strDrinkThumb,
-      doneDate: new Date().toLocaleDateString('pt-BR'),
+      image: cloneDetails[0].idMeal
+        ? cloneDetails[0].strMealThumb : cloneDetails[0].strDrinkThumb,
+      doneDate: new Date().toISOString(),
       tags: cloneDetails[0].strTags
-        ? cloneDetails[0].strTags.split(',').map((item) => item.trim()) : [],
+        ? cloneDetails[0].strTags.split(',')
+          .map((item) => item.trim()) : [],
     };
 
-    const savedItem = JSON.parse(localStorage.getItem('doneRecipes'));
-    const arr = [];
-    if (savedItem) {
-      const array = savedItem;
-      array.push(recipe);
-      localStorage.setItem('doneRecipes', JSON.stringify(array));
-    } else {
-      arr.push(recipe);
-      localStorage.setItem('doneRecipes', JSON.stringify(arr));
-    }
+    const savedItem = JSON.parse(localStorage.getItem('doneRecipes')) || [];
+    savedItem.push(recipe);
+    localStorage.setItem('doneRecipes', JSON.stringify(savedItem));
+
     history.push('/done-recipes');
   }
 
@@ -178,7 +174,7 @@ export function RecipeInProgress() {
                   data-testid={ `${index}-ingredient-step` }
                   style={
                     checkedIngredients.includes(index)
-                      ? { textDecoration: 'line-through' }
+                      ? { textDecoration: 'line-through solid rgb(0, 0, 0)' }
                       : {}
                   }
                 >
