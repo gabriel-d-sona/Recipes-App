@@ -1,0 +1,12 @@
+.carousel-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.img-carousel {
+  width: 50%;
+}
+
+.div-absolute {
+  position: absolute;
+}
