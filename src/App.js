@@ -13,16 +13,16 @@ function App() {
   return (
 
     <Switch>
+      <Route exact path="/meals" component={ Recipes } />
+      <Route exact path="/drinks" component={ Recipes } />
+      <Route exact path="/meals/:id/in-progress" component={ RecipeInProgress } />
+      <Route exact path="/drinks/:id/in-progress" component={ RecipeInProgress } />
       <Route exact path="/" component={ Login } />
       <Route path="/profile" component={ Profile } />
       <Route path="/done-recipes" component={ DoneRecipes } />
       <Route path="/favorite-recipes" component={ FavoriteRecipes } />
       <Route exact path="/drinks/:drinksId" component={ RecipeDetails } />
       <Route exact path="/meals/:mealsId" component={ RecipeDetails } />
-      <Route exact path="/meals/:id/in-progress" component={ RecipeInProgress } />
-      <Route exact path="/drinks/:id/in-progress" component={ RecipeInProgress } />
-      <Route exact path="/drinks" component={ Recipes } />
-      <Route exact path="/meals" component={ Recipes } />
     </Switch>
   );
 }

@@ -91,7 +91,7 @@ function DoneRecipes() {
         <br />
         { doneRecipes.map((recipe, i) => (
           <RecipeCard
-            doneDate={ recipe.doneDate }
+            doneDate={ recipe.doneDate.toLocaleString() }
             key={ recipe.name }
             name={ recipe.name }
             type={ recipe.type }

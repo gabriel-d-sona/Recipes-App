@@ -2,8 +2,6 @@ import React from 'react';
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import renderWithRouter from './helpers/renderWithRouter';
 import App from '../App';
-import meal from './mocks/requestApiMealById';
-import drink from './mocks/requestApiDrinkById';
 import { meals } from '../../cypress/mocks/meals';
 import { drinks } from '../../cypress/mocks/drinks';
 
@@ -14,14 +12,14 @@ beforeEach(() => {
         return Promise.resolve({
           status: 200,
           ok: true,
-          json: () => Promise.resolve(meal),
+          json: () => Promise.resolve(meals),
         });
       }
       if (url === 'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=11007') {
         return Promise.resolve({
           status: 200,
           ok: true,
-          json: () => Promise.resolve(drink),
+          json: () => Promise.resolve(drinks),
         });
       }
       if (url === 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=') {
