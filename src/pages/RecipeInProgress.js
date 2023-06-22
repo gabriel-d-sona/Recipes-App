@@ -76,33 +76,33 @@ function RecipeInProgress() {
     );
   };
 
-  function handleMadeRecipe() {
-    const recipe = {
-      id: cloneDetails[0].idMeal ? cloneDetails[0].idMeal : cloneDetails[0].idDrink,
-      type: cloneDetails[0].idMeal ? 'meal' : 'drink',
-      nationality: cloneDetails[0].idMeal ? cloneDetails[0].strArea : '',
-      category: cloneDetails[0].strCategory,
-      alcoholicOrNot: cloneDetails[0].idMeal ? '' : cloneDetails[0].strAlcoholic,
-      name: cloneDetails[0].idMeal ? cloneDetails[0].strMeal : cloneDetails[0].strDrink,
-      image: cloneDetails[0].idMeal ? cloneDetails[0].strMealThumb
-        : cloneDetails[0].strDrinkThumb,
-      doneDate: new Date().toLocaleDateString('pt-BR'),
-      tags: cloneDetails[0].strTags
-        ? cloneDetails[0].strTags.split(',').map((item) => item.trim()) : [],
-    };
+  // function handleMadeRecipe() {
+  //   const recipe = {
+  //     id: cloneDetails[0].idMeal ? cloneDetails[0].idMeal : cloneDetails[0].idDrink,
+  //     type: cloneDetails[0].idMeal ? 'meal' : 'drink',
+  //     nationality: cloneDetails[0].idMeal ? cloneDetails[0].strArea : '',
+  //     category: cloneDetails[0].strCategory,
+  //     alcoholicOrNot: cloneDetails[0].idMeal ? '' : cloneDetails[0].strAlcoholic,
+  //     name: cloneDetails[0].idMeal ? cloneDetails[0].strMeal : cloneDetails[0].strDrink,
+  //     image: cloneDetails[0].idMeal ? cloneDetails[0].strMealThumb
+  //       : cloneDetails[0].strDrinkThumb,
+  //     doneDate: new Date().toLocaleDateString('pt-BR'),
+  //     tags: cloneDetails[0].strTags
+  //       ? cloneDetails[0].strTags.split(',').map((item) => item.trim()) : [],
+  //   };
 
-    const savedItem = JSON.parse(localStorage.getItem('doneRecipes'));
-    const arr = [];
-    if (savedItem) {
-      const array = savedItem;
-      array.push(recipe);
-      localStorage.setItem('doneRecipes', JSON.stringify(array));
-    } else {
-      arr.push(recipe);
-      localStorage.setItem('doneRecipes', JSON.stringify(arr));
-    }
-    history.push('/done-recipes');
-  }
+  //   const savedItem = JSON.parse(localStorage.getItem('doneRecipes'));
+  //   const arr = [];
+  //   if (savedItem) {
+  //     const array = savedItem;
+  //     array.push(recipe);
+  //     localStorage.setItem('doneRecipes', JSON.stringify(array));
+  //   } else {
+  //     arr.push(recipe);
+  //     localStorage.setItem('doneRecipes', JSON.stringify(arr));
+  //   }
+  //   history.push('/done-recipes');
+  // }
 
   const ingredients = getIngredients(recipeDetails);
   // verifica se os ingredientes estão marcados

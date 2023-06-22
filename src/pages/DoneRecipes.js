@@ -5,8 +5,8 @@ import RecipeCard from '../components/RecipeCard';
 
 function DoneRecipes() {
   const history = useHistory();
-  const recipes = JSON.parse(localStorage.getItem('doneRecipes'));
-  console.log(recipes);
+  // const recipes = JSON.parse(localStorage.getItem('doneRecipes'));
+  // console.log(recipes);
   const [doneRecipes, setDoneRecipes] = useState(recipes);
   const [handleCheckbox, setHandleCheckBox] = useState({ meals: false, drinks: false });
   const [copy, setCopy] = useState(false);
