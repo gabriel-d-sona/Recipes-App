@@ -5,8 +5,8 @@ import RecipeCard from '../components/RecipeCard';
 
 function DoneRecipes() {
   const history = useHistory();
-  // const recipes = JSON.parse(localStorage.getItem('doneRecipes'));
-  // console.log(recipes);
+  const recipes = JSON.parse(localStorage.getItem('doneRecipes'));
+  console.log(recipes);
   const [doneRecipes, setDoneRecipes] = useState(recipes);
   const [handleCheckbox, setHandleCheckBox] = useState({ meals: false, drinks: false });
   const [copy, setCopy] = useState(false);
@@ -91,7 +91,7 @@ function DoneRecipes() {
         <br />
         { doneRecipes.map((recipe, i) => (
           <RecipeCard
-            doneDate={ recipe.doneDate }
+            doneDate={ recipe.doneDate.toLocaleString() }
             key={ recipe.name }
             name={ recipe.name }
             type={ recipe.type }
