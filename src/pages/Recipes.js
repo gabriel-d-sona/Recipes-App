@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Card } from '../components/Card';
 import Header from '../components/Header';
+import Footer from '../components/Footer';
 import { FiltterButton } from '../components/FilterButton';
 
 // Explicação da aplicação requisito 19: a página de receitas tem duas possíves rotas, a /drinks e a /meals,
@@ -139,6 +140,7 @@ export default function Recipes() {
           />
         ))}
       </main>
+      <Footer />
     </div>
   );
 }
