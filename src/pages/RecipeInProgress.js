@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 
-// finalização do projeto
 export function RecipeInProgress() {
   const history = useHistory();
   const [recipeDetails, setRecipeDetails] = useState({});
@@ -220,6 +219,4 @@ export function RecipeInProgress() {
       )}
     </div>
   );
-
-  // end
 }
