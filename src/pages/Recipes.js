@@ -4,6 +4,7 @@ import { Card } from '../components/Card';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { FiltterButton } from '../components/FilterButton';
+import SearchBar from '../components/SearchBar';
 
 // Explicação da aplicação requisito 19: a página de receitas tem duas possíves rotas, a /drinks e a /meals,
 // a página nos trás informações sobre receitas e depende de sua rota para mostrar um devido tipo, no caso entre comidas e bebidas.
@@ -99,6 +100,7 @@ export default function Recipes() {
   return (
     <div>
       <Header />
+      <SearchBar />
       <main>
         { categories
           .slice(0, MN2)
