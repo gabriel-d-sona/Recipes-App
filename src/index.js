@@ -11,11 +11,11 @@ ReactDOM
   .createRoot(document.getElementById('root'))
   .render(
     <BrowserRouter>
-    <RecipesProvider >
-      <UserProvider>
-        <App />
-      </UserProvider>
-    </RecipesProvider>
+      <RecipesProvider >
+        <UserProvider>
+          <App />
+        </UserProvider>
+      </RecipesProvider>
     </BrowserRouter>,
   );
 
