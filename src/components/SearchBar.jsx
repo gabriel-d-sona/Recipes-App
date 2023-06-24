@@ -6,7 +6,7 @@ import SearchBarHandle from './SearchBarHandle';
 function SearchBar() {
   const {
     setSearchBarType,
-    setSearchBarString,
+    // setSearchBarString,
     renderSearch,
   } = useContext(RecipesContext);
 
@@ -23,10 +23,6 @@ function SearchBar() {
   };
 
   // console.log(setSearchBarType);
-
-  const handleSearchChange = ({ target }) => {
-    setSearchBarString(target.value);
-  };
 
   // console.log(setSearchBarString);
 
@@ -68,12 +64,12 @@ function SearchBar() {
         First Letter
       </label>
 
-      <input
+      {/* <input
         onChange={ handleSearchChange }
         data-testid="search-input"
         type="text"
         placeholder="Buscar Receita"
-      />
+      /> */}
 
       <button
         onClick={ () => SearchBarHandle(renderSearch, history) }

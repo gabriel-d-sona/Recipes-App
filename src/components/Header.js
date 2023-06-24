@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
+import RecipesContext from '../context/RecipesContext';
 
 export default function Header() {
   const [clickedBar, setClickedBar] = useState(false);
+
+  const {
+    setSearchBarString,
+  } = useContext(RecipesContext);
+
   const location = useLocation();
   const path = location.pathname;
   const pathSearch = path === '/meals' || path === '/drinks';
@@ -21,6 +27,10 @@ export default function Header() {
   } else if (path === '/favorite-recipes') {
     pageTitle = 'Favorite Recipes';
   }
+
+  const handleSearchChange = ({ target }) => {
+    setSearchBarString(target.value);
+  };
 
   const searchClick = () => {
     setClickedBar(!clickedBar);
@@ -42,7 +52,12 @@ export default function Header() {
         </button>
       )}
 
-      {clickedBar && <input data-testid="search-input" />}
+      {clickedBar && <input
+        onChange={ handleSearchChange }
+        data-testid="search-input"
+        type="text"
+        placeholder="Buscar Receita"
+      /> }
 
       <h1 data-testid="page-title">{pageTitle}</h1>
     </header>
