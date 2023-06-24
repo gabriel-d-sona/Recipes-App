@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Card } from '../components/Card';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { FiltterButton } from '../components/FilterButton';
+import SearchBar from '../components/SearchBar';
+import RecipesContext from '../context/RecipesContext';
 
 // Explicação da aplicação requisito 19: a página de receitas tem duas possíves rotas, a /drinks e a /meals,
 // a página nos trás informações sobre receitas e depende de sua rota para mostrar um devido tipo, no caso entre comidas e bebidas.
@@ -14,7 +16,7 @@ export default function Recipes() {
   const currentPath = history.location.pathname;
   const isMealRoute = currentPath === '/meals';
 
-  const [recipes, setRecipes] = useState([]);
+  const { recipes, setRecipes } = useContext(RecipesContext);
   const [categories, setCategories] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
 
@@ -28,8 +30,9 @@ export default function Recipes() {
       fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
         .then((response) => response.json())
         .then(({ meals }) => {
-          console.log(meals);
+          // console.log(meals);
           const treatedDataForRecipes = meals.slice(0, MN1);
+          console.log(treatedDataForRecipes);
           setRecipes(treatedDataForRecipes);
           setFilteredRecipes(treatedDataForRecipes);
         });
@@ -99,6 +102,7 @@ export default function Recipes() {
   return (
     <div>
       <Header />
+      <SearchBar />
       <main>
         { categories
           .slice(0, MN2)
@@ -120,7 +124,7 @@ export default function Recipes() {
       dependendo de qual rota estiver sendo utilizada a página renderiza os 12
       primeiros itens da lista de receitas que a devida API nos retorna.
     (O requisito pede que sejam renderizados apenas os primeiros 12 itens)  */}
-        { isMealRoute ? recipes.map((recipe, i) => (
+        { isMealRoute ? recipes?.slice(0, MN1)?.map((recipe, i) => (
           <Card
             key={ recipe.strMeal }
             name={ recipe.strMeal }
@@ -129,7 +133,7 @@ export default function Recipes() {
             id={ recipe.idMeal }
             handleDetailsClick={ () => handleDetailsClick(recipe.idMeal) }
           />
-        )) : recipes.map((recipe, i) => (
+        )) : recipes?.slice(0, MN1)?.map((recipe, i) => (
           <Card
             key={ recipe.strDrink }
             name={ recipe.strDrink }
