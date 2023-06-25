@@ -2,8 +2,8 @@ import React from 'react';
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import renderWithRouter from './helpers/renderWithRouter';
 import App from '../App';
-import { meals } from '../../cypress/mocks/meals';
-import { drinks } from '../../cypress/mocks/drinks';
+import meals from '../../cypress/mocks/meals';
+import drinks from '../../cypress/mocks/drinks';
 
 beforeEach(() => {
   jest.spyOn(global, 'fetch')
@@ -49,7 +49,7 @@ describe('Testa a tela de detalhes de uma refeição', () => {
     await waitForElementToBeRemoved(() => screen.getByText(/carregando/i));
     // await waitFor(() => expect(screen.queryByText(/carregando/i)).not.toBeInTheDocument());
 
-    const title = await screen.findByRole('heading', { name: /teriyaki chicken casserole/i });
+    const title = await screen.findByRole('heading', { name: /corba/i });
     expect(title).toBeInTheDocument();
   });
 });
