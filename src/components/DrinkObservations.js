@@ -10,6 +10,8 @@ import './carousel.css';
 import { getLocalStorage, setLocalStorage } from '../services/helpers/localStorage';
 import './btnStartAndContinue.css';
 import './btnFavoriteRecipe.css';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 
 const endPointForMeals = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
 function DrinkObservations({ recipe, history }) {
@@ -18,6 +20,7 @@ function DrinkObservations({ recipe, history }) {
   const [isDone, setIsDone] = useState(false);
   const [inProgress, setInProgress] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
   const { drinksId } = recipeId;
 
   const {
@@ -37,8 +40,11 @@ function DrinkObservations({ recipe, history }) {
   useEffect(() => {
     const fetchApi = async () => {
       const data = await requestApi(endPointForMeals);
-
       setMeals(data.meals);
+
+      const favoritesRecipes = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
+      const favorite = favoritesRecipes.some((item) => (item.id === drinksId));
+      setIsFavorite(favorite);
     };
 
     fetchApi();
@@ -85,6 +91,7 @@ function DrinkObservations({ recipe, history }) {
     } else {
       setLocalStorage('favoriteRecipes', [favoriteRecipe]);
     }
+    setIsFavorite(true);
   };
 
   return (
@@ -221,8 +228,12 @@ function DrinkObservations({ recipe, history }) {
           data-testid="favorite-btn"
           className="favorite-btn"
           onClick={ handleOnClickButtonFavorite }
+          src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
         >
-          Favorite
+          <img
+            src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+            alt="favorite"
+          />
         </button>
       </div>
     </div>

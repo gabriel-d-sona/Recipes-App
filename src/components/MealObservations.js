@@ -10,6 +10,8 @@ import './carousel.css';
 import { getLocalStorage, setLocalStorage } from '../services/helpers/localStorage';
 import './btnStartAndContinue.css';
 import './btnFavoriteRecipe.css';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 
 const endPointForDrinks = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
 function MealObservations({ recipe, history }) {
@@ -18,6 +20,7 @@ function MealObservations({ recipe, history }) {
   const [isDone, setIsDone] = useState(false);
   const [inProgress, setInProgress] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
   const { mealsId } = recipeId;
 
   const {
@@ -37,8 +40,11 @@ function MealObservations({ recipe, history }) {
   useEffect(() => {
     const fetchApi = async () => {
       const data = await requestApi(endPointForDrinks);
-
       setDrinks(data.drinks);
+
+      const favoritesRecipes = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
+      const favorite = favoritesRecipes.some((item) => (item.id === mealsId));
+      setIsFavorite(favorite);
     };
 
     fetchApi();
@@ -85,6 +91,7 @@ function MealObservations({ recipe, history }) {
     } else {
       setLocalStorage('favoriteRecipes', [favoriteRecipe]);
     }
+    setIsFavorite(true);
   };
 
   return (
@@ -181,7 +188,6 @@ function MealObservations({ recipe, history }) {
           ) : undefined))
         }
       </Carousel>
-
       {
         !isDone && !inProgress ? (
           <button
@@ -221,12 +227,15 @@ function MealObservations({ recipe, history }) {
             ) : null
           }
         </div>
-
         <button
           data-testid="favorite-btn"
           onClick={ handleOnClickButtonFavorite }
+          src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
         >
-          Favorite
+          <img
+            src={ isFavorite ? blackHeartIcon : whiteHeartIcon }
+            alt="favorite"
+          />
         </button>
       </div>
     </div>
